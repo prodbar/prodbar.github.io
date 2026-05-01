@@ -1,0 +1,274 @@
+[
+  {
+    "order": 1,
+    "title": "PINN-FEM Framework for Hyperelastic Biomechanics Simulation",
+    "subtitle": "Master's Thesis - Physics-Informed Neural Networks - Computational Biomechanics",
+    "year": "2026",
+    "status": "In progress",
+    "image": "public/images/projects/TFM.png",
+    "description": "Development of a Physics-Informed Neural Network framework to approximate FEM displacement fields in 3D hyperelastic materials, combining Mooney-Rivlin modeling, boundary condition enforcement and neural network optimization.",
+    "categories": [
+      "Computational Modeling",
+      "Biomedical AI"
+    ],
+    "technologies": [
+      "MATLAB",
+      "PINNs",
+      "FEM",
+      "Mooney-Rivlin",
+      "Hyperelasticity",
+      "Optimization"
+    ],
+    "highlights": [
+      "Implemented a FEM reference workflow for a 3D hyperelastic solid under mixed Dirichlet and Neumann boundary conditions.",
+      "Developed a PINN-based approximation of the displacement field using physics-informed loss terms.",
+      "Modeled large-deformation hyperelastic behavior through a Mooney-Rivlin strain energy formulation.",
+      "Studied the effect of architecture, activation functions, optimizers and loss-weighting strategies on training performance.",
+      "Analyzed the role of the Dirichlet penalty weight in accurately reproducing FEM displacement fields.",
+      "Extended the framework toward inverse material parameter identification."
+    ],
+    "links": {}
+  },
+  {
+    "order": 2,
+    "title": "Gen Z Burnout Risk Classification with Neural Networks",
+    "subtitle": "Multiclass neural network classification on tabular behavioral data",
+    "year": "2026",
+    "image": "public/images/projects/Gen Z Burnout Risk Classification with Neural Networks.png",
+    "description": "Deep learning project focused on multiclass classification of burnout risk in Gen Z using tabular lifestyle, mental wellness and digital behavior variables.",
+    "categories": [
+      "Machine Learning",
+      "Healthcare Analytics"
+    ],
+    "technologies": [
+      "Python",
+      "TensorFlow",
+      "Keras",
+      "Keras Tuner",
+      "scikit-learn",
+      "pandas",
+      "NumPy",
+      "Matplotlib",
+      "Seaborn"
+    ],
+    "highlights": [
+      "Built a supervised multiclass classification pipeline for Burnout_Risk with Low, Medium and High classes.",
+      "Applied stratified train-validation-test splitting, z-score scaling, one-hot encoding and class weighting.",
+      "Compared a linear baseline, shallow neural network, Keras Tuner search and deeper MLP architectures.",
+      "Studied the effect of activation functions, dropout intensity and optimizers on model performance.",
+      "Selected a deep MLP with dropout, ReLU activation and RMSprop as the best-performing configuration.",
+      "Interpreted results with accuracy, class-wise precision, recall, F1-score, confusion matrix and training curves."
+    ],
+    "links": {
+      "website": "https://www.kaggle.com/datasets/hammadansari7/gen-z-mental-wellness-and-digital-lifestyle-patterns"
+    }
+  },
+  {
+    "order": 3,
+    "title": "Production Scheduling Optimization on Unrelated Parallel Machines",
+    "subtitle": "Master's coursework group project - Operations Research & Scheduling",
+    "year": "2026",
+    "image": "public/images/projects/Production Scheduling Optimization on Unrelated Parallel Machines.png",
+    "description": "Operations research project focused on production scheduling in unrelated parallel machines, comparing exact and metaheuristic approaches under progressively more realistic constraints.",
+    "categories": [
+      "Optimization"
+    ],
+    "technologies": [
+      "Python",
+      "Google OR-Tools",
+      "CP-SAT",
+      "Genetic Algorithm",
+      "Iterated Greedy",
+      "Excel",
+      "OpenSolver",
+      "pandas",
+      "NumPy"
+    ],
+    "highlights": [
+      "Modeled an unrelated parallel machine scheduling problem with 50 jobs and 5 machines.",
+      "Implemented a base exact model in Excel/OpenSolver and used it as a benchmark.",
+      "Developed Python-based solution approaches using CP-SAT, a Genetic Algorithm and Iterated Greedy.",
+      "Extended the base problem with release dates, sequence-dependent setups, precedence relations and resource constraints.",
+      "Compared methods across increasing levels of complexity using Relative Percentage Deviation.",
+      "Generated reproducible synthetic extensions using fixed random seeds and structured input files."
+    ],
+    "links": {}
+  },
+  {
+    "order": 4,
+    "title": "Gen Z Mental Wellness Multivariate Monitoring",
+    "subtitle": "PCA, PLS, PLS-DA and process monitoring applied to psychological wellbeing data",
+    "year": "2026",
+    "description": "Multivariate analysis project focused on Gen Z mental wellness, combining PCA, PLS, PCR, PLS-DA, Hotelling's T2, SPE diagnostics and Random Forest classification to study lifestyle habits, anxiety and burnout risk.",
+    "categories": [
+      "Statistical Analysis",
+      "Healthcare Analytics"
+    ],
+    "technologies": [
+      "Python",
+      "Dragonet",
+      "PCA",
+      "PLS",
+      "PCR",
+      "PLS-DA",
+      "Random Forest",
+      "Hotelling T2",
+      "SPE",
+      "Cross-validation",
+      "Data Visualization"
+    ],
+    "highlights": [
+      "Explored latent structures in lifestyle, digital habits and psychological wellbeing variables using PCA.",
+      "Compared MLR, PCR and PLS models for explaining Anxiety_Score from lifestyle and digital exposure variables.",
+      "Applied Hotelling's T2 and SPE diagnostics to identify extreme or poorly represented observations without applying mechanical deletion rules.",
+      "Built and interpreted a PLS-DA model for burnout risk discrimination and compared it with a Random Forest classifier."
+    ],
+    "image": "public/images/projects/Gen Z Mental Wellness Multivariate Monitoring.png",
+    "links": {}
+  },
+  {
+    "order": 5,
+    "title": "Time Series Forecasting of Wind Energy Generation in Spain",
+    "subtitle": "ARIMA-based forecasting and temporal analysis in R",
+    "year": "2025",
+    "featured": false,
+    "image": "public/images/projects/Time Series Forecasting of Wind Energy Generation in Spain.png",
+    "description": "Industrial time series forecasting project focused on modelling and predicting wind energy generation in Spain using ARIMA-based methods in R.",
+    "categories": [
+      "Forecasting",
+      "Statistical Analysis"
+    ],
+    "technologies": [
+      "R",
+      "ARIMA",
+      "Forecasting",
+      "Time Series Analysis",
+      "Data Visualization"
+    ],
+    "highlights": [
+      "Developed a time series forecasting project in R using Spanish wind power generation data.",
+      "Applied temporal preprocessing, exploratory analysis and ARIMA-based forecasting methodology.",
+      "Evaluated the behaviour of wind energy generation over time and interpreted the forecasting performance.",
+      "Built a reproducible analytical workflow combining industrial data, statistical modeling and visualization."
+    ],
+    "links": {}
+  },
+  {
+    "order": 6,
+    "title": "Healthcare Cost Analytics with Multivariate Methods",
+    "subtitle": "Master's coursework group project - Healthcare Analytics",
+    "year": "2025",
+    "image": "public/images/projects/Healthcare Cost Analytics with Multivariate Methods.png",
+    "description": "Multivariate analysis project focused on understanding and modeling annual medical insurance costs using dimensionality reduction, categorical data analysis, clustering and supervised classification techniques.",
+    "categories": [
+      "Healthcare Analytics",
+      "Statistical Analysis"
+    ],
+    "technologies": [
+      "Python",
+      "pandas",
+      "NumPy",
+      "scikit-learn",
+      "prince",
+      "Matplotlib",
+      "Seaborn"
+    ],
+    "highlights": [
+      "Analyzed a healthcare insurance dataset with demographic, clinical, lifestyle, policy and cost-related variables.",
+      "Applied PCA to synthesize economic, contractual and clinical information into interpretable latent dimensions.",
+      "Combined PCA with regression modeling to study annual medical cost while reducing multicollinearity.",
+      "Used MCA to explore associations between categorical health, lifestyle and personal profile variables.",
+      "Applied clustering on MCA coordinates to identify homogeneous behavioral and insurance-related profiles.",
+      "Built LDA models to classify insured individuals into low, medium and high annual cost groups."
+    ],
+    "links": {
+      "website": "https://www.kaggle.com/datasets/mohankrishnathalla/medical-insurance-cost-prediction"
+    }
+  },
+  {
+    "order": 7,
+    "title": "Student Sleep and Wellbeing Statistical Analysis in R",
+    "subtitle": "Master's coursework group project - R Programming & Applied Statistics",
+    "year": "2025",
+    "image": "public/images/projects/Student Sleep and Wellbeing Statistical Analysis in R.png",
+    "description": "R-based statistical analysis project studying the relationship between sleep habits, emotional wellbeing and academic performance in university students, including data cleaning, imputation, hypothesis testing and regression modeling.",
+    "categories": [
+      "Statistical Analysis",
+      "Healthcare Analytics"
+    ],
+    "technologies": [
+      "R",
+      "R Markdown",
+      "ggplot2",
+      "mice",
+      "MASS",
+      "car",
+      "knitr"
+    ],
+    "highlights": [
+      "Performed exploratory analysis and variable type definition for a university student sleep and wellbeing dataset.",
+      "Detected constant and near-constant variables, anomalous values, outliers and missing data patterns.",
+      "Applied multiple imputation using mice and assessed normality using Shapiro-Wilk tests.",
+      "Used Box-Cox transformations, Pearson correlation and multiple linear regression.",
+      "Applied Kruskal-Wallis, ANOVA, Levene and Wilcoxon / Mann-Whitney tests.",
+      "Summarized relationships between sleep habits, chronotype, wellbeing indicators and academic performance through visual reporting."
+    ],
+    "links": {}
+  },
+  {
+    "order": 8,
+    "title": "Effective Mechanical Power in Pediatric Mechanical Ventilation",
+    "subtitle": "Bachelor's Thesis awarded with Honors - Biomedical Data Analysis",
+    "year": "2025",
+    "image": "public/images/projects/TFG.png",
+    "description": "Biomedical data analysis project focused on estimating Effective Mechanical Power as a potential indicator of ventilatory aggressiveness in mechanically ventilated pediatric patients.",
+    "categories": [
+      "Biomedical AI",
+      "Healthcare Analytics"
+    ],
+    "technologies": [
+      "MATLAB",
+      "Clinical Data Analysis",
+      "Signal Processing",
+      "Statistical Analysis",
+      "Data Visualization"
+    ],
+    "highlights": [
+      "Analyzed clinical and ventilatory data from pediatric mechanical ventilation cases.",
+      "Developed MATLAB-based analytical workflows to estimate mechanical power-related metrics.",
+      "Studied Effective Mechanical Power as a candidate indicator of ventilatory aggressiveness.",
+      "Built reproducible scripts for preprocessing, calculation and visualization of derived variables.",
+      "Connected biomedical engineering, clinical interpretation and quantitative analysis.",
+      "Bachelor's Thesis awarded with Honors."
+    ],
+    "links": {
+      "github": "https://github.com/prodbar/MechanicalPower-Analysis-PANDORA"
+    }
+  },
+  {
+    "order": 99,
+    "title": "Portfolio Website",
+    "subtitle": "Static GitHub Pages portfolio",
+    "year": "2026",
+    "status": "In progress",
+    "description": "Static portfolio website built with HTML, CSS and vanilla JavaScript, using JSON as the editable source for project information.",
+    "categories": [
+      "Web"
+    ],
+    "technologies": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "JSON",
+      "GitHub Pages"
+    ],
+    "highlights": [
+      "Uses a simple static architecture suitable for GitHub Pages.",
+      "Renders project cards dynamically from data/projects.json.",
+      "Includes responsive layout, category filters and portfolio-ready project metadata."
+    ],
+    "links": {
+      "github": "https://github.com/prodbar/prodbar.github.io"
+    }
+  }
+]

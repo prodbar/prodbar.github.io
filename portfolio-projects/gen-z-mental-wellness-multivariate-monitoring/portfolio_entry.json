@@ -1,0 +1,33 @@
+{
+  "order": 8,
+  "title": "Gen Z Mental Wellness Multivariate Monitoring",
+  "subtitle": "PCA, PLS, PLS-DA and process monitoring applied to psychological wellbeing data",
+  "year": "2026",
+  "status": "",
+  "description": "Multivariate analysis project focused on Gen Z mental wellness, combining PCA, PLS, PCR, PLS-DA, Hotelling’s T², SPE diagnostics and Random Forest classification to study lifestyle habits, anxiety and burnout risk.",
+  "categories": [
+    "Statistical Analysis",
+    "Healthcare Analytics"
+  ],
+  "technologies": [
+    "Python",
+    "Dragonet",
+    "PCA",
+    "PLS",
+    "PCR",
+    "PLS-DA",
+    "Random Forest",
+    "Hotelling T²",
+    "SPE",
+    "Cross-validation",
+    "Data Visualization"
+  ],
+  "highlights": [
+    "Explored latent structures in lifestyle, digital habits and psychological wellbeing variables using PCA.",
+    "Compared MLR, PCR and PLS models for explaining Anxiety_Score from lifestyle and digital exposure variables.",
+    "Applied Hotelling’s T² and SPE diagnostics to identify extreme or poorly represented observations without applying mechanical deletion rules.",
+    "Built and interpreted a PLS-DA model for burnout risk discrimination and compared it with a Random Forest classifier."
+  ],
+  "image": "public/images/projects/Gen Z Mental Wellness Multivariate Monitoring.png",
+  "links": {}
+}

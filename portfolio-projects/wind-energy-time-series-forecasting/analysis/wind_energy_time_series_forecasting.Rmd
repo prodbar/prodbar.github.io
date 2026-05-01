@@ -1,0 +1,696 @@
+---
+title: 'Análisis y modelización predictiva de la generación eólica mensual en España 2020–2024'
+author: |
+  Rafael Macian Castilla  
+  Patricia Rodrigo Barrio  
+  Víctor Rodríguez Albendea
+output:
+  pdf_document:
+    latex_engine: xelatex
+    number_sections: true
+    toc: true
+    toc_depth: 2
+    fig_caption: true
+    keep_tex: false
+  html_document: default
+fontsize: 10.5pt
+geometry: "margin=2.5cm"
+header-includes:
+  - \usepackage{setspace}
+  - \renewcommand{\baselinestretch}{1.1}
+  - \usepackage{ragged2e}
+  - \justifying
+  - \setlength{\parindent}{1.5em}
+  - \setlength{\parskip}{0.3em}
+  - \usepackage{float}
+  - \floatplacement{figure}{H}
+  - \floatplacement{table}{H}
+  - \renewcommand{\contentsname}{Contenido del trabajo}
+knitr:
+  opts_chunk:
+    fig.align: "center"
+    fig.width: 5
+    fig.height: 3
+    echo: true
+    warning: false
+    message: false
+---
+
+\vspace{1cm}
+
+\begin{center}
+\includegraphics[width=12cm, height=4cm]{UPV_LOGO.png}
+\end{center}
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Carga de librerias
+
+```{r, warning = FALSE, message = FALSE}
+library(readxl)
+library(dplyr)
+library(lubridate)
+library(MASS)
+library(forecast)
+library(lmtest)
+library(zoo)
+library(knitr)
+```
+
+
+# Datos de la serie
+
+```{r}
+# Carga y preparación de datos
+
+datos_raw = read_excel("../data/wind_energy_generation_spain_2020_2024.xlsx")
+
+datos_raw$gen_eolica = datos_raw$value
+is.ts(datos_raw$gen_eolica)
+
+datos_raw$datetime = as.Date(datos_raw$datetime)
+datos_raw$yy = year(datos_raw$datetime)
+datos_raw$mm = month(datos_raw$datetime)
+
+# Agregación mensual
+
+datos_mensual = datos_raw %>%
+  group_by(yy, mm) %>%
+  summarize(gen_eolica = sum(gen_eolica), .groups = "drop")
+
+is.ts(datos_mensual)
+
+# Serie temporal mensual
+
+ts_eolica = ts(
+  datos_mensual$gen_eolica,
+  start = c(2020, 1),
+  frequency = 12
+)
+
+print(ts_eolica)
+is.ts(ts_eolica)
+
+```
+
+
+
+```{r}
+# Gráfico inicial
+
+plot(ts_eolica,
+     xlab = "Año",
+     ylab = "Generación eólica (MW)",
+     main = "Evolución mensual de la generación eólica en España (2020–2024)")
+
+```
+
+# Análisis descriptivo de la serie
+
+```{r}
+
+descomp_eolica = stl(ts_eolica, s.window = "periodic")
+
+plot(descomp_eolica,
+     main = "Descomposición STL de la generación eólica mensual")
+
+```
+Con el objetivo de identificar la estructura interna de la serie de generación eólica mensual, se realiza una descomposición STL que permite separar la serie en sus componentes de tendencia, estacionalidad y residuo. Los resultados muestran una estacionalidad anual claramente marcada, así como una tendencia suave de largo plazo, mientras que la componente irregular no presenta patrones sistemáticos relevantes.
+
+
+# Modelos deterministas
+
+## Modelo SES
+
+```{r}
+# Entrenamiento hasta el penúltimo año
+ses_eolica = HoltWinters(ts_eolica[1:55],
+                         beta = FALSE,
+                         gamma = FALSE)
+
+# Gráfico del modelo SES
+plot(ses_eolica,
+     main = "Modelo de suavizado exponencial simple para la generación eólica",
+     ylab = "Generación eólica (MW)",
+     xlab = "Año")
+
+# Valores ajustados
+plot(fitted(ses_eolica),
+     main = "Valores ajustados por el modelo SES",
+     ylab = "Generación eólica ajustada (MW)",
+     xlab = "Año")
+
+# Predicción de los 5 últimos meses
+pred_ses = predict(ses_eolica, n.ahead = 5)
+
+# ECM y RMSE (obs. 56–60)
+ecm_ses  = mean((ts_eolica[56:60] - pred_ses)^2)
+rmse_ses = sqrt(ecm_ses)
+
+
+#Valor de RMSE
+rmse_ses
+
+#Valor de alfa
+ses_eolica$alpha
+```
+Se ajusta un modelo de suavizado exponencial simple (SES) a la serie de generación eólica mensual utilizando como muestra de entrenamiento los primeros 55 meses. Este modelo asume un nivel constante y no incorpora ni tendencia ni estacionalidad, por lo que se utiliza con fines comparativos.
+
+El parámetro de suavizado estimado es $\alpha$ = 0.6957929, lo que indica que el modelo otorga un peso elevado a las observaciones más recientes. A partir del modelo ajustado se realizan predicciones para los cinco últimos meses de la serie, evaluándose su capacidad predictiva mediante el RMSE, con el cual se ha obtenido un valor de 1104.245, que se utilizará posteriormente para comparar con otros modelos más complejos.
+
+
+
+## Modelo de Holt
+
+En este bloque se ajusta un modelo de Holt a la serie de generación eólica sin considerar estacionalidad, incorporando únicamente nivel y tendencia. Se representan los valores ajustados, se analizan los parámetros de suavizado estimados y se realizan predicciones a corto plazo, calculando el RMSE para evaluar la capacidad predictiva del modelo.
+
+```{r}
+
+holt_eolica = HoltWinters(ts_eolica[1:55],
+                          gamma = FALSE)
+
+plot(holt_eolica,
+     main = "Modelo de Holt para la generación eólica",
+     ylab = "Generación eólica (MW)",
+     xlab = "Año")
+
+plot(fitted(holt_eolica),
+     main = "Valores ajustados por el modelo de Holt",
+     ylab = "Generación eólica ajustada (MW)",
+     xlab = "Año")
+
+holt_eolica$alpha
+holt_eolica$beta
+
+# Predicción y RMSE
+pred_holt = predict(holt_eolica, n.ahead = 5)
+
+ecm_holt  = mean((ts_eolica[56:60] - pred_holt)^2)
+rmse_holt = sqrt(ecm_holt)
+
+rmse_holt
+
+```
+
+
+
+
+## Modelo de Holt Winters
+En este caso, se ajusta un modelo Holt-Winters con estacionalidad aditiva a la serie completa de generación eólica. A partir del modelo estimado se obtiene el error cuadrático total y se calcula el RMSE como medida global de precisión del ajuste. Asimismo, se analizan los parámetros de suavizado $\alpha$, $\beta$ y $\gamma$ estimados, con el fin de evaluar la contribución del nivel, la tendencia y la estacionalidad en la dinámica de la serie. Finalmente, se representa gráficamente la comparación entre los valores observados y los valores ajustados por el modelo, permitiendo evaluar visualmente su capacidad para reproducir el comportamiento de la serie.
+
+```{r}
+# Modelo Holt-Winters aditivo (estándar)
+hw_eolica = HoltWinters(ts_eolica, seasonal = "additive")
+
+# SSE total
+hw_eolica$SSE
+
+# RMSE
+rmse_hw = sqrt(hw_eolica$SSE / (length(ts_eolica) - 1))
+rmse_hw
+
+# Parámetros del modelo
+hw_eolica$alpha
+hw_eolica$beta
+hw_eolica$gamma
+
+# Gráfico
+plot(hw_eolica,
+     main = "Holt-Winters aditivo")
+
+```
+
+A continuación, se analiza la estabilidad del proceso de optimización del modelo Holt-Winters con estacionalidad aditiva mediante la estimación del modelo utilizando distintos valores iniciales de los parámetros de suavizado. En primer lugar, se ajusta un modelo con semillas intermedias (m2) y posteriormente otro con semillas más elevadas (m3), calculando en ambos casos el RMSE para evaluar la precisión del ajuste. Asimismo, se representan gráficamente los valores ajustados de cada modelo con el fin de comparar visualmente su comportamiento. La obtención de valores de RMSE prácticamente idénticos y ajustes gráficos muy similares confirma que el algoritmo converge al mismo óptimo independientemente de las condiciones iniciales, evidenciando la estabilidad del modelo y descartando la presencia de óptimos locales.
+```{r}
+# Ajuste cambiando semillas iniciales (m2 y m3)
+
+# Modelo m2: semillas intermedias
+hw_m2 = HoltWinters(
+  ts_eolica,
+  seasonal = "additive",
+  optim.start = c(alpha = 0.3, beta = 0.1, gamma = 0.1),
+  optim.control = list()
+)
+
+rmse_hw_m2 = sqrt(hw_m2$SSE / (length(ts_eolica) - 1))
+rmse_hw_m2
+
+plot(hw_m2,
+     main = "Holt-Winters m2: alfa = 0.3, beta = 0.1, gamma = 0.1")
+
+# Modelo m3: semillas altas
+hw_m3 = HoltWinters(
+  ts_eolica,
+  seasonal = "additive",
+  optim.start = c(alpha = 0.8, beta = 0.5, gamma = 0.5),
+  optim.control = list()
+)
+
+rmse_hw_m3 = sqrt(hw_m3$SSE / (length(ts_eolica) - 1))
+rmse_hw_m3
+
+plot(hw_m3,
+     main = "Holt-Winters m3: alfa = 0.8, beta = 0.5, gamma = 0.5")
+
+```
+
+
+Seguidamente, se ajusta el modelo Holt-Winters con estacionalidad aditiva utilizando el paquete forecast, considerando tanto una inicialización automática (m4) como una inicialización óptima de los estados (m5). Se analizan los parámetros de suavizado estimados, las medidas de precisión y la representación gráfica del ajuste, comprobándose que ambos enfoques conducen a resultados idénticos. Dado que este modelo presenta el menor RMSE, se selecciona como modelo final, completando el análisis con un diagnóstico gráfico de los residuos para verificar su adecuación.
+
+```{r}
+# m4: Holt-Winters aditivo (inicialización automática)
+hw_m4 = hw(ts_eolica, seasonal = "additive")
+
+summary(hw_m4)
+accuracy(hw_m4)
+
+plot(hw_m4,
+     main = "Modelo Holt-Winters (forecast) m4")
+
+# m5: Holt-Winters aditivo (inicialización óptima)
+hw_m5 = hw(ts_eolica,
+           seasonal = "additive",
+           initial = "optimal")
+
+summary(hw_m5)
+accuracy(hw_m5)
+
+plot(hw_m5,
+     main = "Modelo Holt-Winters (forecast) m5")
+
+# Diagnóstico de residuos (modelo m5)
+par(mfrow = c(1, 2))
+hist(hw_m5$residuals,
+     main = "Histograma de los residuos",
+     xlab = "Residuos")
+qqnorm(hw_m5$residuals,
+       main = "QQ-plot normal")
+qqline(hw_m5$residuals)
+
+```
+
+En conjunto, los modelos de suavizado exponencial permiten describir adecuadamente la evolución de la serie de generación eólica. El modelo de Holt, al considerar únicamente nivel y tendencia, proporciona un primer ajuste razonable, aunque resulta insuficiente para capturar la marcada estacionalidad presente en la serie. Por su parte, el modelo Holt-Winters con estacionalidad aditiva mejora notablemente la capacidad explicativa al incorporar explícitamente este componente, obteniendo un menor RMSE y un ajuste más fiel al comportamiento observado. En particular, el modelo estimado mediante el paquete forecast presenta el mejor rendimiento.
+
+# Modelos ARIMA
+
+Antes de ajustar un modelo ARIMA, se analiza la estacionariedad de la serie. En primer lugar, se comprueba la constancia de la varianza mediante la transformación de Box–Cox. 
+
+```{r}
+# Comprobación de varianza y transformación Box-Cox
+
+par(mfrow = c(1, 2))
+
+# Serie original
+plot(ts_eolica,
+     xlab = "Año",
+     ylab = "Generación eólica mensual (MW)",
+     main = "Serie temporal")
+
+# Parámetro lambda de Box-Cox
+lambda_bc = BoxCox.lambda(ts_eolica)
+lambda_bc
+
+# Transformación Box-Cox
+ts_eolica_bc = (ts_eolica^lambda_bc - 1) / lambda_bc
+
+plot(ts_eolica_bc,
+     xlab = "Año",
+     ylab = "Transformación Box-Cox",
+     main = "Serie transformada")
+
+```
+
+El valor estimado del parámetro $\lambda$ sugiere la conveniencia de aplicar dicha transformación, obteniéndose una serie con varianza estabilizada.
+
+```{r}
+par(mfrow = c(1, 2))
+
+acf(ts_eolica_bc,
+    lag.max = 48,
+    main = "ACF",
+    ylim = c(-1, 1))
+
+pacf(ts_eolica_bc,
+     lag.max = 48,
+     main = "PACF",
+     ylim = c(-1, 1))
+
+```
+
+A continuación, se estudia la estacionariedad en media de la serie transformada. 
+```{r}
+ndiffs(ts_eolica_bc)
+```
+
+El resultado de la función ndiffs() indica que no es necesaria la diferenciación regular, por lo que se fija d=0. Este resultado es coherente con los correlogramas, que no muestran un decrecimiento lento característico de una tendencia no estacionaria.
+
+
+
+Posteriormente, se analiza la posible presencia de estacionalidad no estacionaria. 
+
+```{r}
+nsdiffs(ts_eolica_bc)
+```
+
+La función nsdiffs() indica la necesidad de aplicar una diferenciación estacional de periodo 12, por lo que se fija D=1. 
+
+```{r}
+# Diferenciación estacional (D = 1, s = 12)
+ts_eolica_bc_seas = diff(ts_eolica_bc, lag = 12)
+
+plot(ts_eolica_bc_seas,
+     main = "Serie Box-Cox con diferenciación estacional (D = 1)")
+
+par(mfrow = c(1, 2))
+acf(ts_eolica_bc_seas,
+    lag.max = 48,
+    main = "ACF",
+    ylim = c(-1, 1))
+
+pacf(ts_eolica_bc_seas,
+     lag.max = 48,
+     main = "PACF",
+     ylim = c(-1, 1))
+
+
+```
+
+Tras realizar esta transformación, los correlogramas ACF y PACF de la serie resultante confirman que la serie puede considerarse estacionaria, tanto en media como en estacionalidad, quedando lista para la identificación del modelo ARIMA.
+
+Una vez alcanzada la estacionariedad de la serie mediante la transformación Box–Cox y la diferenciación estacional, se procede a la identificación del modelo ARIMA. Siguiendo el principio de parsimonia, se comienzan ajustando modelos sencillos de bajo orden y, posteriormente, se incrementa progresivamente la complejidad para capturar posibles dependencias temporales no explicadas.
+
+```{r, warning = FALSE}
+
+# Modelos tentativos (d=0, D=1, s=12)
+fit_1 = arima(ts_eolica_bc, order = c(0,0,1), seasonal = c(0,1,1))
+fit_2 = arima(ts_eolica_bc, order = c(1,0,0), seasonal = c(0,1,1))
+fit_3 = arima(ts_eolica_bc, order = c(1,0,1), seasonal = c(0,1,1))
+
+fit_4 = arima(ts_eolica_bc, order = c(0,0,1), seasonal = c(1,1,0))
+fit_5 = arima(ts_eolica_bc, order = c(1,0,0), seasonal = c(1,1,0))
+fit_6 = arima(ts_eolica_bc, order = c(1,0,1), seasonal = c(1,1,1))
+
+# MA regular creciente con SMA(1)
+fit_7  = arima(ts_eolica_bc, order = c(0,0,2), seasonal = c(0,1,1))
+fit_8  = arima(ts_eolica_bc, order = c(0,0,3), seasonal = c(0,1,1))
+fit_9  = arima(ts_eolica_bc, order = c(0,0,4), seasonal = c(0,1,1))
+
+# Combinaciones ARMA moderadas
+fit_10 = arima(ts_eolica_bc, order = c(1,0,1), seasonal = c(0,1,1))
+fit_11 = arima(ts_eolica_bc, order = c(1,0,2), seasonal = c(0,1,1))
+
+# AR estacional
+fit_12 = arima(ts_eolica_bc, order = c(0,0,2), seasonal = c(1,1,0))
+fit_13 = arima(ts_eolica_bc, order = c(0,0,3), seasonal = c(1,1,0))
+fit_14 = arima(ts_eolica_bc, order = c(0,0,4), seasonal = c(1,1,0))
+
+
+
+```
+
+La comparación entre modelos se realiza mediante el criterio de información de Akaike (AIC).
+
+
+```{r}
+AIC(fit_1, fit_2, fit_3, fit_4, fit_5, fit_6, fit_7, 
+  fit_8, fit_9, fit_10, fit_11, fit_12, fit_13, fit_14)
+
+```
+
+
+El modelo que presenta el menor valor de AIC entre todos los considerados es el ARIMA(0,0,4)(1,1,0)12, por lo que se selecciona como modelo final para el análisis y la predicción de la generación eólica mensual.
+
+```{r}
+fit_14
+```
+
+
+
+
+# Validación del modelo escogido
+
+## Analisis de la significación de los parámetros
+
+Obtener las métricas del modelo ajustado
+
+```{r}
+coeftest(fit_14)
+```
+Los resultados muestran que no todos los coeficientes de media móvil regular resultan significativos al nivel habitual del 5 %. Sin embargo, el término MA(4) y el término autorregresivo estacional de primer orden (SAR(1)) presentan p valores muy reducidos, lo que indica que ambos parámetros son estadísticamente significativos y desempeñan un papel clave en la explicación de la dinámica de la serie.
+
+Este resultado es coherente con la estructura observada en la identificación del modelo y justifica la inclusión de dichos términos en el modelo final.
+
+
+## Análisis de los residuos
+
+Para evaluar la adecuación del modelo ARIMA ajustado, se analizan gráficamente los residuos mediante su representación temporal, un histograma y un gráfico Q–Q normal.
+
+
+```{r}
+
+layout(matrix(c(1,1,2,3),2,2, byrow=TRUE))
+plot(fit_14$residuals,main='Residuos del modelo ARIMA ajustado')
+hist(fit_14$residuals, br=12, main='Residuos')
+qqnorm(fit_14$residuals, main='Residuos')
+qqline(fit_14$residuals, main='Residuos')
+
+```
+
+La evolución temporal de los residuos muestra oscilaciones alrededor de cero sin patrones sistemáticos, lo que sugiere media nula y varianza aproximadamente constante. El histograma presenta una distribución razonablemente simétrica y centrada en cero, mientras que el gráfico Q–Q indica una alineación aceptable de los cuantiles empíricos con la recta teórica, con ligeras desviaciones en los extremos.
+
+Por todo ello, estos resultados permiten asumir una normalidad aproximada de los residuos y respaldan la validez del modelo desde el punto de vista distributivo.
+
+Con el fin de comprobar la ausencia de dependencia temporal en los residuos del modelo ARIMA ajustado, se analizan las funciones de autocorrelación simple (ACF) y parcial (PACF).
+
+```{r, width = 8.5, height = 12}
+#png("Funciones.png", width = 8.5, height = 12, units = "in", res = 300)
+
+par(mfrow=c(1,2))
+acf(ts(fit_14$residuals), lag.max=48,main="residuos modelo ajustado",ylim=c(-1,1))
+pacf(ts(fit_14$residuals), lag.max=48,main=" residuos modelo ajustado ",ylim=c(-1,1))
+
+#dev.off()
+
+```
+Como se observa en los correlogramas, todos los coeficientes, salvo el correspondiente al retardo cero, se encuentran dentro de las bandas de confianza. No se detectan picos significativos ni patrones sistemáticos, lo que indica ausencia de autocorrelación residual.
+
+Este resultado sugiere que el modelo ha capturado adecuadamente la estructura temporal de la serie y que los residuos pueden considerarse incorrelados.
+
+
+Para contrastar formalmente la independencia de los residuos, se aplica el test de Ljung–Box para distintos retardos K=6,12,18,24.
+
+
+```{r}
+Box.test(fit_14$residuals, lag=6, type="Ljung-Box", fitdf = 2)
+Box.test(fit_14$residuals, lag=12, type="Ljung-Box", fitdf = 2)
+Box.test(fit_14$residuals, lag=18, type="Ljung-Box", fitdf = 2)
+Box.test(fit_14$residuals, lag=24, type="Ljung-Box", fitdf = 2)
+```
+En todos los casos, los p valores obtenidos son claramente superiores al nivel de significación $\alpha$=0.05. Por tanto, no se rechaza la hipótesis nula de ausencia de autocorrelación conjunta en los residuos.
+
+Con ello, se confirma que los residuos del modelo pueden considerarse independientes, reforzando la validez del modelo ARIMA ajustado.
+
+
+Finalmente, con la función tsdiag() se obtiene un resumen gráfico del diagnóstico de los residuos del modelo ajustado para distintos valores del retardo m. Este análisis incluye la evolución temporal de los residuos estandarizados, la función de autocorrelación de los residuos y los p-valores del test de Ljung–Box.
+
+```{r, width = 8.5, height = 12}
+#png("Incorrelación.png", width = 8.5, height = 12, units = "in", res = 1000)
+
+tsdiag(fit_14)
+
+#dev.off()
+```
+En el gráfico se observa que los p valores se mantienen sistemáticamente por encima del nivel de significación habitual ($\alpha$=0.05), lo que confirma la ausencia de autocorrelación en los residuos y refuerza su comportamiento como ruido blanco.
+
+
+
+En conjunto, los resultados obtenidos en el análisis de significación de los parámetros y en el diagnóstico de los residuos indican que el modelo ARIMA(0,0,4)(1,1,0)12 se ajusta adecuadamente a la serie de generación eólica mensual. Los residuos presentan un comportamiento compatible con un proceso de ruido blanco, cumpliendo los supuestos de la metodología Box–Jenkins. Por tanto, el modelo puede considerarse estadísticamente válido y apropiado para la realización de predicciones.
+
+
+# Comparación con modelos alternativos
+
+En primer lugar, se ajusta un modelo ARIMA a la serie original de generación eólica mensual, sin aplicar ninguna transformación previa, con el objetivo de disponer de un modelo de referencia y evaluar la necesidad de estabilizar la varianza.
+```{r}
+fit_nt = arima(ts_eolica,
+                order = c(0,0,4),
+                seasonal = c(1,1,0))
+
+fit_nt
+accuracy(fit_nt)
+
+```
+Dado que el parámetro de la transformación Box–Cox estimado es cercano a cero, se ajusta a continuación un modelo ARIMA sobre la serie transformada mediante logaritmos, con el fin de mejorar la estabilidad de la varianza.
+
+```{r}
+fit_log = arima(log(ts_eolica),
+                 order = c(0,0,4),
+                 seasonal = c(1,1,0))
+
+fit_log
+accuracy(fit_log)
+
+```
+Posteriormente, se ajusta un modelo ARIMA sobre la serie transformada mediante Box–Cox, utilizando el valor del parámetro λ estimado previamente, lo que permite obtener un ajuste más adecuado desde el punto de vista estadístico.
+```{r}
+fit_bc = arima(ts_eolica_bc,
+                order = c(0,0,4),
+                seasonal = c(1,1,0))
+
+fit_bc
+accuracy(fit_bc)
+
+```
+Finalmente, se emplea la función auto.arima() con lambda = "auto" para seleccionar automáticamente la transformación y el modelo óptimo, comprobando que el resultado coincide con el modelo identificado mediante la metodología Box–Jenkins.
+
+```{r}
+fit_auto = auto.arima(ts_eolica,
+                       lambda = "auto",
+                       d = 0,
+                       D = 1,
+                       seasonal = TRUE,
+                       stepwise = FALSE,
+                       approximation = FALSE)
+
+fit_auto
+accuracy(fit_auto)
+
+```
+Una vez seleccionado el modelo ARIMA definitivo, se analiza la significación estadística de sus parámetros mediante un contraste individual basado en el estadístico z, con el objetivo de identificar qué coeficientes contribuyen de forma relevante a la explicación de la serie
+
+```{r}
+coeftest(fit_auto)
+```
+Con el fin de validar el modelo ajustado, se realiza un análisis gráfico de los residuos, estudiando su evolución temporal, su distribución y su adecuación a una distribución normal, comprobando así los supuestos de media nula y varianza constante.
+
+```{r}
+layout(matrix(c(1,1,2,3), 2, 2, byrow = TRUE))
+
+# Residuos en el tiempo
+plot(fit_auto$residuals,
+     main = "Residuos del modelo ARIMA seleccionado",
+     ylab = "Residuos",
+     xlab = "Tiempo")
+
+# Histograma de los residuos
+hist(fit_auto$residuals,
+     breaks = 12,
+     main = "Histograma de los residuos",
+     xlab = "Residuos",
+     ylab = "Frecuencia",
+     col = "lightgray",
+     border = "black")
+
+# Q-Q plot
+qqnorm(fit_auto$residuals,
+       main = "Gráfico Q-Q de los residuos",
+       ylab = "Cuantiles muestrales",
+       xlab = "Cuantiles teóricos")
+qqline(fit_auto$residuals, col = "red")
+
+
+```
+
+Finalmente, se analizan las funciones de autocorrelación simple (ACF) y parcial (PACF) de los residuos para verificar la ausencia de dependencia temporal y confirmar que los residuos pueden considerarse un proceso de ruido blanco.
+
+```{r}
+par(mfrow = c(1,2))
+
+acf(ts(fit_auto$residuals),
+    lag.max = 48,
+    ylim = c(-1,1),
+    main = "ACF de los residuos del modelo")
+
+pacf(ts(fit_auto$residuals),
+     lag.max = 48,
+     ylim = c(-1,1),
+     main = "PACF de los residuos del modelo")
+
+```
+
+
+
+# Explotación del modelo escogido
+
+Una vez validado el modelo ARIMA(0,0,4)(1,1,0)12, se procede a explotar su capacidad predictiva generando pronósticos para los 12 meses posteriores al final de la muestra. Para ello se sigue un procedimiento en dos etapas: predicción manual a partir de la ecuación explícita del modelo y comparación con las predicciones automáticas obtenidas mediante la función forecast().
+
+```{r}
+
+# 1) Lambda y serie transformada
+lambda = fit_auto$lambda
+W = BoxCox(ts_eolica, lambda)
+
+# 2) Residuos
+a = residuals(fit_auto)
+
+# 3) Tablas para el informe
+tabla_W = data.frame(Mes = as.yearmon(time(tail(W, 24))), 
+                     Z_t =as.numeric(tail(ts_eolica, 24)),
+                     W_t = as.numeric(tail(W, 24)))
+
+tabla_residuos = data.frame(Mes = as.yearmon(time(tail(a, 4))),
+                            a_t = as.numeric(tail(a, 4)))
+
+tabla_W
+tabla_residuos
+
+# 4) Coeficientes (tal cual salida del modelo)
+Phi1 = -0.6286
+ma1 = -0.0347
+ma2 = -0.0837
+ma3 = -0.0647
+ma4 =  0.6219
+
+# 5) Predicción manual en W (12 meses)
+h = 12
+T = length(W)
+
+W_ext = c(as.numeric(W), rep(NA, h))
+a_ext = c(as.numeric(a), rep(0,  h))  # errores futuros = 0
+
+W_pred = numeric(h)
+
+for (k in 1:h) {
+  t = T + k
+  #ECUACIÓN EXPLÍCITA DEL MODELO
+  W_hat = (1 + Phi1) * W_ext[t - 12] - Phi1 * W_ext[t - 24] + a_ext[t] +
+    ma1 * a_ext[t - 1] + ma2 * a_ext[t - 2] + ma3 * a_ext[t - 3] +
+    ma4 * a_ext[t - 4]
+  W_ext[t] = W_hat
+  W_pred[k] = W_hat
+}
+
+# 6) Tabla final de predicción manual
+start_next = as.yearmon(time(tail(ts_eolica, 1))) + 1/12
+Mes = seq(from = start_next, by = 1/12, length.out = h)
+
+tabla_pred_manual = data.frame(Mes = Mes,W_predicha = W_pred,
+  Z_predicha = InvBoxCox(W_pred, lambda))
+
+kable(tabla_pred_manual)
+
+```
+
+La tabla anterior muestra las predicciones obtenidas manualmente para los 12 meses posteriores al final de la muestra, tanto en la escala transformada Wt como en la escala original Yt tras aplicar la inversa de Box–Cox. Estas predicciones se utilizarán a continuación para compararlas con las generadas automáticamente por la función forecast().
+
+Para contrastar la implementación manual del modelo, se obtienen también las predicciones automáticas del mismo ARIMA(0,0,4)(1,1,0)12 mediante la función forecast() del paquete forecast. En este caso se genera un horizonte de 12 pasos vista y se representa además la prolongación de la serie durante 24 meses para visualizar la evolución futura.
+
+```{r, warning=FALSE}
+pred = forecast(fit_auto, n.ahead = 12) #Para realizar solo 12 predicciones se
+#debería utilizar h = 12, ya que con n.ahead, forecast calcula 2 ciclos de 12.
+#Sin embargo, para una mayor estética y para demostrar que se sigue correctamente
+#la evolución de la serie, se muestran en el gráfico las 24 futuras
+#predicciones.
+pred
+plot(pred)
+```
+
+
+
+
+
+
+
+

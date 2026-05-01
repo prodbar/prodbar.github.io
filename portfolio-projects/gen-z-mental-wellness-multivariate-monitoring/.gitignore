@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# Local/raw data
+data/GenZ_dataset_con_low.xlsx
+data/*.xlsx
+
+# System files
+.DS_Store
+Thumbs.db

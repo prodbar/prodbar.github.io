@@ -1,0 +1,30 @@
+{
+  "order": 6,
+  "title": "Time Series Forecasting of Wind Energy Generation in Spain",
+  "subtitle": "ARIMA-based forecasting and temporal analysis in R",
+  "year": "2025",
+  "status": "Completed",
+  "featured": false,
+  "image": "public/images/projects/wind-energy-forecasting-cover.svg",
+  "description": "Industrial time series forecasting project focused on modelling and predicting wind energy generation in Spain using ARIMA-based methods in R.",
+  "categories": [
+    "Time Series",
+    "Forecasting",
+    "R",
+    "Industrial Analytics"
+  ],
+  "technologies": [
+    "R",
+    "ARIMA",
+    "Forecasting",
+    "Time Series Analysis",
+    "Data Visualization"
+  ],
+  "highlights": [
+    "Developed a time series forecasting project in R using Spanish wind power generation data.",
+    "Applied temporal preprocessing, exploratory analysis and ARIMA-based forecasting methodology.",
+    "Evaluated the behaviour of wind energy generation over time and interpreted the forecasting performance.",
+    "Built a reproducible analytical workflow combining industrial data, statistical modeling and visualization."
+  ],
+  "links": {}
+}

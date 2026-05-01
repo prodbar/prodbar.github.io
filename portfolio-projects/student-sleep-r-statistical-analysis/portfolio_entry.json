@@ -1,0 +1,31 @@
+{
+  "order": 5,
+  "title": "Student Sleep and Wellbeing Statistical Analysis in R",
+  "subtitle": "Completed master's coursework project · R Programming & Statistical Analysis",
+  "year": "2026",
+  "status": "Completed",
+  "description": "R-based statistical analysis project studying the relationship between sleep habits, emotional wellbeing and academic performance in university students, including data cleaning, imputation, hypothesis testing and regression modeling.",
+  "categories": [
+    "Statistical Analysis",
+    "R Programming",
+    "Health & Wellbeing Analytics"
+  ],
+  "technologies": [
+    "R",
+    "R Markdown",
+    "ggplot2",
+    "mice",
+    "MASS",
+    "car",
+    "knitr"
+  ],
+  "highlights": [
+    "Performed exploratory analysis and variable type definition for a university student sleep and wellbeing dataset.",
+    "Detected constant and near-constant variables, anomalous values and missing data patterns.",
+    "Applied multiple imputation using mice and assessed normality using Shapiro-Wilk tests.",
+    "Used Box-Cox transformations, Pearson correlation and multiple linear regression.",
+    "Applied Kruskal-Wallis, ANOVA, Levene and Wilcoxon / Mann-Whitney tests.",
+    "Summarized sleep, wellbeing and academic performance relationships with visual reporting."
+  ],
+  "links": {}
+}

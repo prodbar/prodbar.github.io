@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# Local/raw data
+medical_insurance.csv
+data/*.csv
+data/raw/
+
+# Original coursework files kept locally
+Códigos/
+Trabajo Análisis Multivariante.pdf
+Vídeo AM.mp4
+
+# System files
+.DS_Store
+Thumbs.db

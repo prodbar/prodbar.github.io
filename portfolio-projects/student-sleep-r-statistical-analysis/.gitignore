@@ -1,0 +1,23 @@
+# R
+.Rhistory
+.RData
+.Ruserdata
+renv/library/
+*.html
+*.log
+*.aux
+*.tex
+
+# Local coursework dataset
+Grupo4_Sueño.txt
+Grupo4_Sueno.txt
+data/Grupo4_Sueño.txt
+data/Grupo4_Sueno.txt
+
+# Original coursework files kept locally
+TrabajoAcademicoR.Rmd
+TrabajoAcademicoR.pdf
+
+# System files
+.DS_Store
+Thumbs.db

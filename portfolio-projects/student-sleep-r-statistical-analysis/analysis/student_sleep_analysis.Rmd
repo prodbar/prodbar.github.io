@@ -1,0 +1,534 @@
+---
+title: 'Grupo 4. Estudio del sueño'
+author: |
+  Rafael Macian Castilla  
+  José Ramón Mena Pérez  
+  Patricia Rodrigo Barrio  
+  Víctor Rodríguez Albendea
+output:
+  pdf_document:
+    latex_engine: xelatex
+    number_sections: true
+    toc: true
+    toc_depth: 2
+    fig_caption: true
+    keep_tex: false
+  html_document: default
+fontsize: 10.5pt
+geometry: "margin=2.5cm"
+header-includes:
+  - \usepackage{setspace}
+  - \renewcommand{\baselinestretch}{1.1}
+  - \usepackage{ragged2e}
+  - \justifying
+  - \setlength{\parindent}{1.5em}
+  - \setlength{\parskip}{0.3em}
+  - \usepackage{float}
+  - \floatplacement{figure}{H}
+  - \floatplacement{table}{H}
+  - \renewcommand{\contentsname}{Contenido del trabajo}
+knitr:
+  opts_chunk:
+    fig.align: "center"
+    fig.width: 7
+    fig.height: 4.5
+    echo: true
+    warning: false
+    message: false
+---
+
+\vspace{1.3cm}
+
+\noindent\includegraphics[width=\textwidth]{UPV_LOGO.png}
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,comment='')
+
+# Cargamos las librerías que van a ser utilizadas a lo largo del trabajo.
+
+library(flextable)
+library(knitr)
+library(clickR)
+library(mice)
+library(ggplot2)
+library(reshape2)
+library(car)
+library(MASS)
+library(gridExtra)
+library(scales)
+```
+
+\newpage
+```{r}
+# Se definen, a continuación, unas funciones que serán utilizadas a lo largo del trabajo.
+plot_dist = function(x, main, xlab) {
+  hist(x, main = main, xlab = xlab, ylab = "Frecuencia",col = "lightblue", 
+       border = "white", breaks = "FD"); qqnorm(x,main = paste("PPN de", xlab),
+       pch = 20,cex = 0.7,col = "grey5"); qqline(x, col = "red", lwd = 2)}
+shapiro_tab = function(x_list, nombres) {tests = lapply(x_list, shapiro.test)
+  data.frame(Variable=nombres,W=sapply(tests, function(t) as.numeric(t$statistic)),
+    p_value=sapply(tests, function(t) t$p.value))}
+```
+# Introducción
+
+## Descripción de la BBDD: contexto y significado de las variables
+
+La base de datos utilizada recoge información de una muestra aleatoria de estudiantes universitarios que completaron diferentes pruebas y cuestionarios relacionados con sus hábitos de sueño, bienestar emocional y rendimiento académico. Incluye variables demográficas (género y curso), académicas (GPA, clases perdidas), psicológicas (niveles de depresión, ansiedad, estrés y felicidad) y conductuales (cronotipo, consumo de alcohol y horas de sueño). También se registran indicadores específicos del descanso, como las horas de acostarse y levantarse entre semana y fines de semana, la calidad percibida del sueño o la realización de noches en vela.
+
+## Objetivos
+
+El objetivo principal del estudio es analizar la relación entre los hábitos de sueño y diferentes aspectos del bienestar y rendimiento académico de los estudiantes. De forma más específica, se busca identificar qué variables se asocian con una peor calidad del sueño, cómo influyen factores como el consumo de alcohol o el cronotipo, y en qué medida el descanso puede relacionarse con la felicidad, el rendimiento y el estado emocional. Además, se pretende aplicar correctamente las técnicas de exploración, limpieza y análisis estadístico.
+
+
+#	Análisis exploratorio y preparación de los datos
+
+```{r}
+sueno = read.table('../data/Grupo4_Sueno.txt', row.names = 28, header = TRUE, as.is = TRUE)
+aux = data.frame(Variables = colnames(sueno), Tipo = c('cat_nominal', 
+  'cat_ordinal', 'cat_nominal', 'numerical', 'cat_nominal', rep('numerical',7), 
+  rep('cat_ordinal',3), rep('numerical',2), 'cat_ordinal', rep('numerical',8), 
+  'cat_nominal'), stringsAsFactors = FALSE)
+```
+
+
+Para la revisión de la BBDD y su posterior limpieza, vamos a ir paso por paso viendo cómo es la BBDD.
+
+## Variables constantes y casi constantes (numéricas)
+```{r}
+descriptive(sueno[,aux$Tipo == 'numerical'])
+```
+
+En la revisión inicial de las variables numéricas se aprecia que la mayoría tienen un comportamiento bastante razonable, con medias y medianas similares. Tanto el GPA como la puntuación cognitiva (CognitionZscore) aparecen bien centrados, mientras que las variables relacionadas con depresión, ansiedad y estrés (DepressionScore, AnxietyScore y StressScore) tienden a concentrarse en valores bajos. En contraste, la variable de felicidad (Happiness) se inclina hacia valores altos, lo que refleja un nivel de satisfacción general en la muestra. 
+Por otro lado, la excepción más destacada es ClassesMissed, que muestra una fuerte asimetría y además cuenta con 24 valores perdidos, algo a tener en cuenta en los análisis posteriores.
+
+A continuación, para eliminar variables de forma razonada, se opta por pasar a aplicar el coeficiente de variación y así, poder asegurar que las variables son casi constantes.
+
+```{r, fig.width=7.5, fig.height=1.9}
+numericas = aux$Variables[aux$Tipo=='numerical']
+
+CV = function(x, na.rm = FALSE, digits = 2) {
+  miCV = sd(x, na.rm = na.rm)/mean(x, na.rm = na.rm);return(round(miCV, digits = digits))}
+
+CV_sueno = apply(sueno[, numericas], 2, CV, na.rm = TRUE,digits = 3)
+sort(sort(CV_sueno[CV_sueno <= 0.05]))
+
+p1 = ggplot(sueno, aes(x = WeekdayBed)) +
+  geom_histogram(binwidth = 0.5, fill = "#69b3a2", color = "white") +
+  labs(title = "Histograma de WeekdayBed",
+       x = "WeekdayBed (hora de irse a dormir entre semana)",y = "Frecuencia") +
+  theme_minimal(base_size = 10) + theme(plot.title = element_text(face = "bold", hjust = 0.5))
+p2 = ggplot(sueno, aes(x = CognitionZscore)) +
+  geom_histogram(binwidth = 0.25, fill = "#8ecae6", color = "white") +
+  labs(title = "Histograma de CognitionZscore",
+       x = "CognitionZscore (rendimiento cognitivo)",y = "Frecuencia") +
+  theme_minimal(base_size = 10)+theme(plot.title = element_text(face = "bold", hjust = 0.5))
+grid.arrange(p1, p2, ncol = 2)
+
+```
+
+Aunque la variable de hora de acostarse (WeekdayBed) presenta un coeficiente de variación bajo (menor a 0,05), se decidió mantenerla en el análisis, ya que refleja adecuadamente los patrones de sueño. El rango observado (desde las 21h hasta aproximadamente las 29h, es decir, las 5 a.m.) muestra diferencias relevantes en los hábitos, por lo que resulta útil para explorar su relación con otras variables. Asimismo, se observa un valor atípico en el coeficiente de variación de la variable CognitionZscore, lo cual era previsible teniendo en cuenta el valor tan cercano a 0 que mostraba su media y el aspecto de su histograma, de modo que se optó por no eliminar esta variable, ya que se aprecia que no es constante. Por lo tanto, en este análisis no se eliminará ninguna variable.
+
+## Variables constantes y casi constantes (categóricas)
+
+```{r, warning=FALSE, fig.width=8, fig.height=4.4}
+categ_ordinal = aux$Variables[aux$Tipo == "cat_ordinal"]
+categ_nominal = aux$Variables[aux$Tipo == "cat_nominal"]
+categ_total = c(categ_ordinal, categ_nominal)
+
+plot_categ_pct = function(data, var) {tab = table(data[[var]], useNA = "i")
+pct = 100 * tab / sum(tab);df = data.frame(Categoria = names(pct),Porcentaje = as.numeric(pct))
+  
+ggplot(df, aes(x = Categoria, y = Porcentaje, fill = Categoria)) +
+  geom_bar(stat="identity", color="black", width=0.7, linewidth=0.5) +
+  geom_text(aes(label=sprintf("%.1f%%", Porcentaje)), vjust=-0.2, size=3) +
+  labs(title=var, x="", y="Porcentaje (%)") + scale_fill_brewer(guide="none") +
+  scale_y_continuous(limits=c(0,110), breaks=seq(0,100,25)) +
+  theme_minimal(base_size=10) + theme(plot.title=element_text(hjust=0.5, face="bold"),
+  axis.text.x=element_text(angle=30, hjust=1),panel.grid.major.x=element_blank(),
+  panel.grid.minor=element_blank())}
+
+plots = lapply(categ_total[1:9], function(v) plot_categ_pct(sueno, v))
+grid.arrange(grobs = plots, ncol = 3)
+```
+En las variables categóricas nominales analizadas no se detectan desequilibrios extremos. Por un lado, a distribución por género es relativamente equilibrada, mientras que en LarkOwl predomina la categoría intermedia (Neither). Por otro lado, en EarlyClass la mayoría de estudiantes tiene clases tempranas, y en AllNighter la categoría “sí” es minoritaria. No obstante, se considera que sigue siendo relevante para el análisis puesto que es entendible que, en el contexto del estudio, ese suceso sea normal.
+
+
+En las variables categóricas ordinales la distribución resulta equilibrada y sin categorías vacías. En ClassYear se observa una representación adecuada de los cuatro cursos. En los estados emocionales (DepressionStatus, AnxietyStatus, Stress) predomina la categoría “normal”, aunque existen suficientes casos en las categorías “moderate” y “severe” para su análisis. Finalmente, en AlcoholUse destacan los consumidores moderados y ligeros, pero también se mantienen presentes las categorías de abstinencia y consumo elevado.
+
+
+## Valores anómalos o inconsistentes
+
+Se observa que la variable CognitionZscore presenta valores negativos, lo que genera problemas al aplicar escala logarítmica y dificultará la visualización conjunta de las variables. Para solventarlo, se ha desplazado esta variable sumándole 1.62 (su valor mínimo en negativo), de forma que todos los valores pasan a ser positivos. El boxplot muestra los resultados tras este ajuste, con una escala logarítmica que permite comparar mejor la dispersión de todas las variables numéricas.
+
+```{r, fig.width = 9, fig.height = 4}
+suenoTransf = sueno; suenoTransf$CognitionZscore = suenoTransf$CognitionZscore + 1.62
+
+boxplot(suenoTransf[, aux$Variables[aux$Tipo == "numerical"]] + 1,log = "y", las = 2, 
+ col = "lightgreen", border = "darkgreen", cex.axis = 0.55,
+ main = "Boxplots con CognitionZscore desplazada",ylab = "Valores (escala logarítmica)")
+```
+
+Algunas de las variables que presentan valores anómalos o poco comunes son las siguientes:
+
+En el caso de Happiness, el valor mínimo observado es `r min(sueno$Happiness)`, que aunque resulta inusual, puede considerarse razonable en situaciones extremas.
+
+Respecto a Average Sleep, el valor máximo registrado alcanza `r max(sueno$AverageSleep)`, lo cual excede el rango lógico (no es posible dormir más de 24 horas en un día). Por tanto, estos casos se recodificarán como NA para evitar distorsiones en los análisis posteriores.
+
+En cuanto al Weekend Sleep, aunque algunos valores medios pueden parecer bajos, se consideran dentro de la variabilidad esperable, por lo que se mantienen en el conjunto de datos.
+
+```{r, fig.width=9, fig.height=6}
+sueno2=sueno; sueno2[which.max(sueno2$AverageSleep), "AverageSleep"] = NA
+```
+## Valores faltantes
+### Exploración del número de faltantes por observación y variable
+
+```{r}
+faltantes = function(x,digits=3){suma = sum(is.na(x))
+  porcentaje = round(100*mean(is.na(x)),digits=digits)
+  misfalt=c(suma,porcentaje); names(misfalt)=c('Suma','Porcentaje');return(misfalt)}
+
+faltFilas = t(apply(sueno2,1, faltantes)); rownames(faltFilas) = rownames(sueno2)
+faltFilas[faltFilas[,'Porcentaje'] > 20,,drop=FALSE]
+
+faltColumnas = t(apply(sueno2,2, faltantes))
+faltColumnas[faltColumnas[,'Porcentaje'] > 0,,drop=FALSE]
+```
+En el análisis de los valores faltantes se observa que, por casos, no existe ninguna observación que cuyos valores supongan más del 20%. Por variables, únicamente cuatro variables presentan valores faltantes (ClassesMissed, AnxietyScore, Stress y AverageSleep), siendo la mayor cantidad 24 ausencias (9.5%), igualmente muy inferior al límite del 20%. Por tanto, no resulta necesario eliminar ni observaciones ni variables, y se optará por estrategias de imputación según convenga en el análisis posterior.
+
+### Imputación mediante la librería *mice*
+
+La mayoría de variables están completas, sin datos ausentes. Las variables con datos faltantes tienen una proporción muy baja respecto al total de observaciones. Por lo tanto, se procede a la imputación:
+```{r, fig.width=8, fig.height=3,warning=FALSE}
+categoricas = aux$Variables[aux$Tipo != 'numerical']
+
+for (i in categoricas){sueno2[,i] = as.factor(sueno2[,i])}
+
+suenoImp = mice(sueno2, m =4 , seed = 2, method = NULL, print = FALSE)
+allImp = complete(suenoImp, action = "all", include = TRUE)
+suenoImp1 = complete(suenoImp, action = 1); rownames(suenoImp1) = rownames(sueno2)
+
+vars_na = names(which(sapply(sueno2, function(x) sum(is.na(x))) > 0))
+vars_na_num = vars_na[aux$Tipo[match(vars_na, aux$Variables)] == "numerical"]
+
+par(mfrow = c(1, length(vars_na_num)))
+for (i in 1:length(vars_na_num)) {mivar = sapply(allImp, function(x) x[, vars_na_num[i]])
+  boxplot(mivar,main = vars_na_num[i], col = "lightblue", border = "darkblue",
+          ylab = "Valores imputados")}
+```
+
+```{r, fig.height=2,fig.width=4, fig.align='center'}
+imputaciones = lapply(1:4, function(i) {df = complete(suenoImp, action = i)
+  df$Imputacion = paste("Imp", i);df})
+
+imputaciones[[5]] = sueno2; imputaciones[[5]]$Imputacion = "Original"
+
+sueno_all = do.call(rbind, imputaciones); sueno_all = subset(sueno_all, !is.na(Stress))
+
+ggplot(sueno_all, aes(x = Stress, fill = Imputacion)) +
+  geom_bar(position = "fill", color = "white", width = 0.8) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  scale_fill_manual(values = c("Original" = "#1b9e77", "Imp 1" = "#66c2a5",
+     "Imp 2" = "#8da0cb", "Imp 3" = "#a6d854","Imp 4" = "#ffd92f")) + 
+  labs(title = "Distribución de 'Stress' en imputaciones y datos originales",
+       x = "Categoría", y = "Proporción (%)") +
+  theme_minimal(base_size = 6) + theme(legend.position = "bottom")
+```
+
+Como todas las imputaciones mantienen una distribución coherente con la original, se  selecciona la imputación 1 para continuar con el análisis estadístico por motivos de simplicidad.
+\newpage
+
+#	Análisis estadístico
+
+A lo largo del documento se emplean distintos tests estadísticos y se presentan diversas representaciones gráficas. Con el fin de mantener la claridad y limpieza del texto, el código correspondiente se mostrará únicamente la primera vez que se utilice cada test o tipo de gráfico. Esta decisión busca mejorar la legibilidad y favorecer una transmisión más ordenada y comprensible de la información.
+
+## Pregunta 1
+**¿La falta de sueño afecta al rendimiento académico (GPA)?**
+
+Las hipótesis a contrastar son las siguiente, $H_0$: no existe relación significativa entre las horas medias de sueño (AverageSleep) y la nota media (GPA) y $H_1$: a menor número de horas de sueño, menor nota media (GPA).
+Dado que se trata de dos variables numéricas continuas, se aplica un test de correlación.
+
+En primer lugar, se comprueba la normalidad de ambas variables mediante el test de Shapiro–Wilk:
+
+```{r}
+shapiro_table = shapiro_tab(x_list  = list(suenoImp1$AverageSleep, suenoImp1$GPA),
+  nombres = c("AverageSleep", "GPA")); kable(shapiro_table)
+```
+
+Se observa como el test de Shapiro rechaza la normalidad de la variable GPA (p-valor < 0.05).
+Por tanto, se aplican distintas transformaciones estudiadas y se visualizan sus papeles probabilísticos normales y sus histogramas, con el fin de comprobar cuál de ellas se aproxima mejor a una distribución normal.
+Esto se realiza aprovechando que la variable AverageSleep sí se distribuye normalmente, de modo que se pueda aplicar posteriormente el test paramétrico de Pearson, en lugar de un test no paramétrico.
+
+```{r, fig.width=8, fig.height=3}
+# Se aplica Box-Cox para estimar el lambda óptimo
+myboxcox = boxcox(lm(suenoImp1$GPA ~ 1),plotit=FALSE)
+lambda = myboxcox$x[which.max(myboxcox$y)]
+gpaTransf = data.frame(original = suenoImp1$GPA,sqrt = sqrt(suenoImp1$GPA),
+ log = log(suenoImp1$GPA),power2 = suenoImp1$GPA^2,boxcox = (suenoImp1$GPA^lambda - 1)/lambda)
+```
+
+```{r, fig.width=8, fig.height=3,echo=TRUE}
+par(mfcol = c(2, 5), mar = c(3, 3, 3, 1), oma = c(0, 0, 2, 0),          
+    cex.axis = 0.8, cex.lab = 0.9, cex.main = 1)
+
+for (n in names(gpaTransf)) {
+  plot_dist(gpaTransf[[n]],main = paste("Histograma de", n),xlab = n) }
+mtext("Distribución y normalidad de GPA en cada imputación",outer = TRUE, font = 2)
+```
+
+Tras observar los histogramas y los papeles probabilísticos normales de todas las transformaciones, se aplica el test de Shapiro–Wilk a cada una de ellas con el fin de determinar cuál presenta un p-valor más elevado, y por tanto, cuál se aproxima mejor a la distribución normal.
+```{r}
+testNorm = sapply(gpaTransf, shapiro.test);testNorm[c("statistic", "p.value"),]
+```
+
+Después de visualizar los p-valores obtenidos en los tests de normalidad, se observa que las transformaciones Power² y Box–Cox presentan los mejores resultados.
+Por tanto, se selecciona la transformación Box–Cox para aplicar el test de correlación de Pearson, con el objetivo de determinar si existe una relación entre las horas medias de sueño y el rendimiento académico.
+```{r}
+suenoImp1$GPA_final = gpaTransf$boxcox
+cor.test(suenoImp1$AverageSleep, suenoImp1$GPA_final, method = "pearson")
+```
+El coeficiente de correlación de Pearson es r = -0.0650 con un p-valor = 0.3031. Dado que p > 0.05, no se rechaza la hipótesis nula, por lo que no existe relación lineal significativa entre las horas medias de sueño y el GPA transformado. Para observarlo de manera más visual, se representa un gráfico de dispersión:
+
+```{r, fig.width=5.3, fig.height=1.8, message = FALSE, fig.align='center'}
+modelo =lm(GPA ~ AverageSleep, data = suenoImp1);r2 = summary(modelo)$r.squared
+
+ggplot(suenoImp1, aes(x = AverageSleep, y = GPA)) + geom_point(color = "gray30", 
+  fill = "skyblue", shape = 20, alpha = 0.8, size = 2.5, stroke = 0.8) +
+  geom_smooth(method = "lm", se = FALSE, color = "red", linewidth = 0.9) +  
+  annotate("text", x = Inf, y = Inf, label = paste0("R² = ", round(r2, 3)), 
+           hjust = 1.1, vjust = 1.5, size = 3.5, color = "black") +
+  labs(title = "Relación entre horas de sueño y rendimiento académico",
+       x = "Horas medias de sueño", y = "Nota media (GPA)") + theme_minimal()
+```
+
+
+El gráfico confirma la ausencia de una tendencia clara entre las variables, en coherencia con los resultados obtenidos en los tests estadísticos.
+Por tanto, se concluye que las horas medias de sueño no están significativamente relacionadas con el rendimiento académico.
+
+## Pregunta 2
+**¿Las personas con peor calidad de sueño (PoorSleepQuality) presentan niveles más altos de ansiedad,depresión o estres?**
+
+Las hipótesis a contrastar son: $H_0$, la cual indica que no existe relación significativa entre la calidad del sueño y las puntuaciones de depresión, ansiedad y estrés y $H_1$: a mayor puntuación de depresión, ansiedad o estrés, peor calidad del sueño (al menos una de las variables influye significativamente).
+
+Al tratarse de cuatro variables numéricas, se plantea la aplicación de un modelo de regresión múltiple, utilizando como variable dependiente la calidad del sueño (PoorSleepQuality), donde valores más altos indican una peor calidad del sueño, y como variables explicativas las puntuaciones de depresión (DepressionScore), ansiedad (AnxietyScore) y estrés (StressScore), donde igualmente valores más altos reflejan mayor afectación psicológica.
+
+Antes de ajustar el modelo, se comprueba la normalidad de las variables implicadas. Para ello, se muestran los resultados obtenidos aplicando el test de Shapiro-Wilk:
+
+```{r}
+shapiro_table2 = shapiro_tab(x_list  = list(suenoImp1$PoorSleepQuality,
+    suenoImp1$AnxietyScore,suenoImp1$DepressionScore,suenoImp1$StressScore), 
+    nombres = c("PoorSleepQuality", "AnxietyScore", "DepressionScore", "StressScore"))
+kable(shapiro_table2)
+```
+
+Al observar los p-valores obtenidos, se confirma el rechazo de la hipótesis de normalidad en las cuatro variables. Por tanto, en este caso no se visualizarán los histogramas ni los papeles probabilísticos normales, con el fin de optimizar el espacio disponible. En su lugar, se aplicará directamente la transformación de Box–Cox a todas las variables, dado que en el ejercicio anterior fue la que ofreció mejores resultados junto con la transformación cuadrática. 
+Posteriormente, se volverán a comprobar los p-valores del test de normalidad para evaluar si la transformación mejora la distribución de los datos.
+
+```{r}
+# Se crean nuevas columnas desplazadas (+1) solo para las variables con ceros.
+suenoImp1$DepressionScore_trans = suenoImp1$DepressionScore + 1
+suenoImp1$AnxietyScore_trans     = suenoImp1$AnxietyScore + 1
+suenoImp1$StressScore_trans      = suenoImp1$StressScore + 1
+suenoImp1$PoorSleepQuality_trans = suenoImp1$PoorSleepQuality
+
+# Se aplica la transformación Box–Cox sobre las columnas "_trans"
+vars_p2 = c("PoorSleepQuality_trans", "DepressionScore_trans", 
+            "AnxietyScore_trans", "StressScore_trans")
+# Se calcula el lambda óptimo sin mostrar el gráfico
+for (v in vars_p2) {modelo = lm(suenoImp1[[v]] ~ 1)
+  bc = boxcox(modelo, plotit = FALSE);lambda = bc$x[which.max(bc$y)]
+  
+  # Si lambda ≈ 0, se usa log(x) para evitar NaN
+  if (abs(lambda) < 1e-5) {suenoImp1[[paste0(v, "_bc")]] = log(suenoImp1[[v]])
+  } else {suenoImp1[[paste0(v, "_bc")]] = (suenoImp1[[v]]^lambda - 1) / lambda} 
+  cat(v, " -> lambda óptimo:", round(lambda, 3), "\n")}
+```
+Se comprueba nuevamente la normalidad con Shapiro-Wilk de las variables de interés transformadas:
+```{r,echo=TRUE}
+shapiro_table3 = shapiro_tab(x_list = list(suenoImp1$PoorSleepQuality_trans_bc,
+ suenoImp1$DepressionScore_trans_bc,suenoImp1$AnxietyScore_trans_bc,
+ suenoImp1$StressScore_trans_bc), nombres = c("PoorSleepQuality_trans_bc","DepressionScore_trans_bc",
+    "AnxietyScore_trans_bc","StressScore_trans_bc")); kable(shapiro_table3)
+```
+Tras aplicar la transformación de Box–Cox a las cuatro variables, se observa que no se alcanza la normalidad estricta en ninguna de ellas (p < 0.05 en todos los casos).
+Sin embargo, los valores de W aumentan respecto a los obtenidos inicialmente, lo que indica una mejor aproximación a la normalidad y una reducción de la asimetría.
+Por tanto, aunque las distribuciones no son perfectamente normales, se considera que la transformación ha mejorado parcialmente su comportamiento y permite continuar con el modelo de regresión múltiple, comprobando después la normalidad de los residuos del modelo.
+
+Una vez transformadas las variables, se procede a ajustar un modelo de regresión lineal múltiple utilizando la variable dependiente PoorSleepQuality_trans_bc y las variables explicativas DepressionScore_trans_bc, AnxietyScore_trans_bc y StressScore_trans_bc.
+El objetivo es analizar si alguna de las tres variables psicológicas influye significativamente en la calidad del sueño.
+```{r}
+modelo_p2 = lm(PoorSleepQuality_trans_bc ~ DepressionScore_trans_bc + 
+  AnxietyScore_trans_bc + StressScore_trans_bc, data = suenoImp1); summary(modelo_p2)
+```
+
+El modelo de regresión lineal múltiple resulta significativo en su conjunto (F = 22.78; p < 0.001), lo que indica que al menos una de las variables psicológicas consideradas influye en la calidad del sueño.
+Los coeficientes de DepressionScore (beta_1 =0.31) y AnxietyScore (p = 0.16) son positivos y estadísticamente significativos, lo que sugiere que mayores niveles de depresión y ansiedad se asocian con una peor calidad del sueño. En cambio, la variable StressScore no mostró un efecto significativo (p = 0.595).
+En resumen, el modelo explica aproximadamente un 21 % de la variabilidad en la calidad del sueño (R² ajustado = 0.206), valor que se considera razonable en estudios psicológicos, donde intervienen múltiples factores no observados.
+No obstante, se debe tener en cuenta que los resultados pueden estar distorsionados por la presencia de colinealidad entre las variables explicativas, tal y como se muestra en el siguiente gráfico:
+```{r, fig.width=4.5, fig.height=2.2, fig.align='center'}
+corr = suenoImp1[, c("DepressionScore_trans_bc", "AnxietyScore_trans_bc","StressScore_trans_bc")]
+corr_matrix = round(cor(corr, use = "complete.obs"), 2) 
+rownames(corr_matrix) = c("Depresión", "Ansiedad", "Estrés")
+colnames(corr_matrix) = c("Depresión", "Ansiedad", "Estrés")
+corr_data = as.data.frame(as.table(corr_matrix))
+colnames(corr_data) = c("Variable1", "Variable2", "Correlación")
+
+ggplot(corr_data, aes(x = Variable1, y = Variable2, fill = Correlación)) +
+  geom_tile(color = "white") + geom_text(aes(label = Correlación), color = "black") +
+  scale_fill_gradient(low = "white", high = "lightblue", name = "Indice de correlación") +
+  labs(title = "Correlación entre Depresión, Ansiedad y Estrés",
+       x = NULL, y = NULL) + theme_minimal(base_size = 10) +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 11),
+    panel.grid = element_blank(),legend.title = element_text(size = 10),
+    legend.text = element_text(size = 9))
+```
+A continuación, se comprueban los supuestos de normalidad, incorrelación y homocedasticidad de los residuos del modelo ajustado. Se va a empezar estudiando la normalidad de los residuos a través del test de Shapiro–Wilk y observando tanto el papel probabilístico normal como el histograma de los residuos. Asimismo, se analiza la incorrelación mediante la representación gráfica de los residuos frente a los valores ajustados: 
+```{r, fig.width=7, fig.height=2.2, fig.align='center'}
+par(mfrow = c(1,3), mar = c(4, 4, 3, 1), oma = c(0, 0, 1, 0),
+    cex.axis = 0.8, cex.lab = 0.9, cex.main = 1)
+shap_res = shapiro_tab(x_list  = list(modelo_p2$residuals),nombres = c("Residuos"));kable(shap_res)
+plot_dist(modelo_p2$residuals,main = "Distribución de residuos",xlab = "Residuos")
+plot(fitted(modelo_p2), modelo_p2$residuals,xlab = "Valores ajustados",
+     ylab = "Residuos",main = "Residuos vs. Valores ajustados",
+     pch = 20, cex = 0.7,col = "lightblue3");abline(h = 0, col = "grey40", lwd = 2, lty = 2)
+```
+En cuanto a la normalidad, el p-valor (0.626) es superior al nivel de significación habitual ($alpha = 0.05$), por lo que no se rechaza la hipótesis nula de normalidad. Del mismo modo el histograma y el PPN muestran una distribución aproximadamente normal de los residuos, sin asimetrías ni valores atípicos destacables. Por tanto, se considera que el supuesto de normalidad se cumple adecuadamente en el modelo ajustado.
+
+
+En lo referente a la incorrelación, el gráfico de residuos frente a valores ajustados muestra una distribución aleatoria de los puntos alrededor del eje horizontal, sin tendencia ni forma definida. Esto indica que no existen patrones sistemáticos en la dispersión, por lo que, de forma visual, se cumple el supuesto de incorrelación en el modelo ajustado.
+
+A continuación, con tal de contrastar la hipótesis de homocedasticidad, se realiza un modelo de regresión lineal utilizando los residuos al cuadrado como variable dependiente. Este análisis permitirá confirmar si existen diferencias significativas en la varianza de los residuos debido a los factores del modelo.
+```{r}
+residuos = modelo_p2$residuals; residuos2 = residuos^2
+mod_res2 = lm(residuos2 ~ DepressionScore_trans_bc + AnxietyScore_trans_bc + 
+                StressScore_trans_bc, data = suenoImp1);summary(mod_res2)
+```
+
+Los resultados de la regresión sobre los residuos al cuadrado muestran un p-valor global de 0.754, muy superior al nivel de significación habitual ($alpha$ = 0.05).
+En consecuencia, no se rechaza la hipótesis nula de homocedasticidad, lo que indica que la varianza de los residuos no depende significativamente de las variables incluidas en el modelo original.
+
+Por tanto, tras validar los supuestos del modelo de regresión, se concluye que el modelo es significativo en su conjunto (p < 0.001) y que las variables depresión y ansiedad influyen de forma directa y positiva sobre la calidad del sueño. Esto implica que a mayores niveles de depresión y ansiedad, peor calidad del descanso, mientras que el estrés no muestra un efecto estadísticamente significativo. El modelo explica aproximadamente un 21 % de la variabilidad en la calidad del sueño, un valor razonable dentro del ámbito psicológico, donde influyen múltiples factores no observados.
+
+## Pregunta 3
+**¿El cronotipo influye en la calidad del sueño y el rendimiento cognitivo?**
+
+```{r}
+vars_p3 = suenoImp1[, c("LarkOwl", "PoorSleepQuality", "CognitionZscore")]
+vars_p3$LarkOwl = factor(vars_p3$LarkOwl)
+```
+Una vez seleccionadas las variables clave, el siguiente paso es comprobar los supuestos de normalidad de las variables numéricas.
+
+```{r,fig.width=6.1,fig.height=3.4,echo=TRUE, fig.align='center'}
+par(mfrow = c(2, 2),mar = c(4, 4, 3, 1),oma = c(0, 0, 2, 0),
+    cex.axis = 0.8, cex.lab = 0.9, cex.main = 1)
+plot_dist(vars_p3$PoorSleepQuality,main = "Distribución de la Calidad del Sueño",
+          xlab = "PoorSleepQuality")
+plot_dist(vars_p3$CognitionZscore,main = "Distribución del Rendimiento Cognitivo",
+          xlab = "CognitionZscore")
+```
+
+Al realizar el test de Shapiro-Wilk con el objetivo de analizar de forma más robusta la normalidad de las variables se obtiene:
+```{r}
+shapiro_table = shapiro_tab(x_list  = list(suenoImp1$CognitionZscore, 
+ suenoImp1$PoorSleepQuality),nombres = c("CognitionZscore", "PoorSleepQuality"))
+kable(shapiro_table)
+```
+
+Al observar los gráficos, CognitionZscore muestra una distribución bastante normal, mientras que PoorSleepQuality se ve claramente asimétrica. El test de Shapiro–Wilk lo confirma: CognitionZscore (p = 0.318) se distribuye normalmente, pero PoorSleepQuality (p < 0.001) no.
+
+Para responder a esta pregunta, se realizarán dos contrastes de hipótesis. En primer lugar, dado que la variable PoorSleepQuality no sigue una distribución normal, se aplicará un test no paramétrico de Kruskal–Wallis para comparar la calidad del sueño entre los tres grupos de cronotipo (Lark, Owl y Neither). Las hipótesis a contrastar son:
+$H_0$, que la distribución de PoorSleepQuality es la misma en los tres grupos de cronotipo y $H_1$: al menos un grupo difiere en la distribución de PoorSleepQuality.
+
+```{r}
+kruskal.test(PoorSleepQuality ~ LarkOwl, data = vars_p3)
+```
+
+El resultado del test de Kruskal–Wallis ($p = 0.0068$) indica que existen diferencias significativas en la calidad del sueño entre los grupos de cronotipo. Por tanto, se rechaza $H_0$ y se concluye que al menos un grupo difiere en su distribución de PoorSleepQuality.
+
+Por otro lado, como la variable CognitionZscore sí se distribuye de forma normal, se aplicará un ANOVA de un factor para comparar el rendimiento cognitivo entre los tres grupos.
+Las hipótesis a contrastar se basan en las siguientes,
+$H_0$: $\mu_{Lark} = \mu_{Owl} = \mu_{Neither}$ y $H_1$: al menos una de las medias difiere del resto.
+
+```{r}
+anova_p3 = aov(CognitionZscore ~ LarkOwl, data = vars_p3); summary(anova_p3)
+```
+El resultado del ANOVA ($p = 0.654$) muestra que no existen diferencias significativas en el rendimiento cognitivo entre los tres grupos de cronotipo. Por tanto, no se rechaza $H_0$ y se concluye que el CognitionZscore es similar en Larks, Owls y Neither.
+
+Ahora bien, para que el ANOVA sea válido, se deben comprobar las propiedas de normalidad, homocedasticidad e independencia de los residuos. En concreto, se evaluará la normalidad y la homocedasticidad a partir de los residuos del modelo. El test de Shapiro-Wilk realizado ofrece los siguientes resultados:
+```{r, fig.width=8, fig.height=3, echo=TRUE}
+residuos = residuals(anova_p3)
+par(mfrow = c(1,3), mar = c(4, 4, 3, 1), oma = c(0, 0, 2, 0), 
+ cex.axis = 0.8, cex.lab = 0.9, cex.main = 1)
+shapiro_table = shapiro_tab(x_list  = list(residuos),nombres = c("Residuos"));kable(shapiro_table)
+plot_dist(residuos,main = "Distribución de los residuos",xlab = "Residuos")
+plot(as.numeric(factor(vars_p3$LarkOwl)), anova_p3$residuals,xlab = "Cronotipo",
+     ylab = "Residuos",main = "Residuos por grupo de cronotipo",pch = 20, 
+     cex = 0.7, col = "lightblue4", xaxt = "n")
+axis(side = 1, at = 1:3, labels = levels(factor(vars_p3$LarkOwl)))
+abline(h = 0, col = "grey40", lwd = 2, lty = 2)
+leveneTest(CognitionZscore ~ LarkOwl, data = vars_p3)
+```
+La inspección visual de los residuos, junto con el test de Shapiro Wilk (p = 0,4569) y de Levene (p = 0.304), indica que se cumplen los supuestos de normalidad y homocedasticidad del modelo. Por tanto, el ANOVA resulta válido para analizar las diferencias en el rendimiento cognitivo entre los grupos de cronotipo.
+
+Para complementar los resultados de los tests estadísticos, se representan a continuación boxplots que permiten visualizar las diferencias entre los tres cronotipos en cuanto a la calidad del sueño y el rendimiento cognitivo. Estos gráficos ayudan a observar de forma más clara la tendencia detectada en los contrastes.
+
+```{r,fig.height=2.8,fig.width=6.5,echo=TRUE}
+par(mfrow = c(1,2))
+boxplot(PoorSleepQuality ~ LarkOwl, data = vars_p3,main = "Calidad del sueño",
+xlab = "Cronotipo", ylab = "PoorSleepQuality",col = c("lightblue", "lightgreen", "lightpink"))
+boxplot(CognitionZscore ~ LarkOwl, data = vars_p3,main = "Rendimiento cognitivo",
+xlab = "Cronotipo", ylab = "CognitionZscore",col = c("lightblue", "lightgreen", "lightpink"))
+```
+
+Dado que el Kruskal–Wallis solo informa de la existencia de diferencias, pero no especifica entre qué grupos se producen, se aplicó un test post-hoc de Wilcoxon por pares con corrección de Bonferroni para identificar dichas diferencias.
+
+```{r, warning = FALSE}
+pairwise.wilcox.test(vars_p3$PoorSleepQuality, vars_p3$LarkOwl,p.adjust.method = "bonferroni")
+```
+El análisis post-hoc mostró que el grupo Owl presenta una calidad del sueño significativamente peor que los grupos Lark y Neither (p < 0.05), mientras que no se observaron diferencias entre Lark y Neither. En conjunto, estos resultados sugieren que el cronotipo influye en la calidad del sueño, siendo peor en los individuos nocturnos (Owls), pero no tiene un efecto significativo sobre el rendimiento cognitivo.
+
+## Pregunta 4
+**¿Las clases tempranas (EarlyClass) están asociadas con peor descanso entre semana?**
+
+Para responder a esta pregunta se analizará si tener clases tempranas (antes de las 9 a.m.) influye en las horas medias de sueño entre semana (WeekdaySleep).
+Como se comparan dos grupos independientes (con clases tempranas frente a sin clases tempranas), se aplicará un test t de Student si se cumple la normalidad, o bien un test no paramétrico de Mann–Whitney en caso contrario. Las hipótesis a contrastar son:
+$H_0$: la media de horas de sueño entre semana es la misma en ambos grupos y $H_1$: los estudiantes con clases tempranas duermen menos entre semana.
+
+```{r}
+vars_p4 = suenoImp1[, c("EarlyClass", "WeekdaySleep")]
+vars_p4$EarlyClass = factor(vars_p4$EarlyClass,levels = c(0,1),
+                    labels = c("Sin clases tempranas", "Con clases tempranas"))
+```
+
+A continuación se observará la normalidad de estas variables. Para ello, además del PPN y el histograma, se aplica un test de Shapiro obtenido como resultado:
+
+```{r,fig.height=2.8,fig.width=6.,echo=TRUE}
+shap_weekday = shapiro_tab(x_list  = list(vars_p4$WeekdaySleep),nombres = c("WeekdaySleep"))
+kable(shap_weekday); par(mfrow = c(1,2), mar = c(4, 4, 3, 1), oma = c(0, 0, 1, 0), 
+ cex.axis = 0.8, cex.lab = 0.9, cex.main = 0.9)
+plot_dist(vars_p4$WeekdaySleep,main = "Distribución de WeekdaySleep",xlab = "WeekdaySleep")
+```
+Aunque visualmente la variable WeekdaySleep parece bastante simétrica, el test de Shapiro–Wilk (p = 0.00024) indica que no se cumple el supuesto de normalidad. Por tanto, se utilizará el test no paramétrico de Mann–Whitney para comparar las horas de sueño entre los estudiantes con y sin clases tempranas.
+
+
+```{r}
+wilcox.test(WeekdaySleep ~ EarlyClass, data = vars_p4, alternative = "less")
+```
+El resultado del test ($p = 0.9999$) indica que no existen diferencias significativas en las horas de sueño entre semana según si los estudiantes tienen clases tempranas o no. Por tanto, no se rechaza $H_0$, y se concluye que tener clases antes de las 9 a.m. no parece reducir el descanso medio entre semana. Gráficamente, se observa de la siguiente manera:
+
+```{r, fig.height=2.5,fig.width=5,echo=TRUE}
+par(mar = c(3.2, 4.2, 1.5, 1))
+boxplot(WeekdaySleep ~ EarlyClass, data = vars_p4,xlab = NULL,
+ylab = "WeekdaySleep",col = c("lightblue", "lightgreen"))
+```
+
+
+En el boxplot se aprecia que los estudiantes con clases tempranas tienden a dormir ligeramente menos horas entre semana que aquellos sin clases tempranas. Sin embargo, el test de Mann-Whitney mostró que esta diferencia no es estadísticamente significativa ($p = 0.9999$).
+Por tanto, aunque existe una pequeña diferencia en las medias, no hay evidencia suficiente para afirmar que las clases tempranas estén asociadas con un peor descanso entre semana.
+
+# Conclusiones
+
+A lo largo de este trabajo se ha realizado un análisis completo de una base de datos sobre bienestar y rendimiento de los estudiantes en relación con el sueño. En primer lugar, se llevó a cabo una limpieza exhaustiva de los datos, identificando variables constantes, valores anómalos y datos faltantes. Mediante el coeficiente de variación se comprobó que ninguna variable era prácticamente constante, por lo que se decidió conservarlas todas. También se corrigieron valores imposibles, como el caso de un registro con más de 24 horas de sueño, y se aplicaron imputaciones múltiples para las variables con pocos valores perdidos, asegurando la integridad del conjunto antes de pasar a los análisis estadísticos.
+
+En la fase inferencial se abordaron varias cuestiones clave. En primer lugar, se comprobó que las horas medias de sueño no mostraban una relación significativa con la nota media (GPA), lo que sugiere que el rendimiento académico no depende directamente del tiempo de descanso. En cambio, el análisis de regresión múltiple reveló que la depresión y la ansiedad influyen de forma clara sobre la calidad del sueño, mientras que el estrés no mostró un efecto relevante. Este modelo explicó cerca de un 21 % de la variabilidad, un valor razonable en el contexto psicológico. Además, se observó que el cronotipo tiene un impacto significativo en la calidad del sueño: los estudiantes de tipo nocturno (“owls”) tienden a descansar peor que los de tipo matutino o intermedio, aunque el rendimiento cognitivo no difiere entre grupos. Finalmente, se comprobó que tener clases tempranas no se asocia con una reducción significativa del sueño entre semana, pese a una ligera diferencia visual en los gráficos.
+
+En conclusión, los resultados indican que los factores emocionales y los patrones circadianos influyen más en la calidad del descanso que las variables académicas o de horario. El trabajo ha permitido extraer conclusiones relevantes sobre los hábitos de sueño en universitarios y aplicar de forma rigurosa el proceso de depuración y análisis estadístico aprendido, garantizando la coherencia y validez de los resultados obtenidos.

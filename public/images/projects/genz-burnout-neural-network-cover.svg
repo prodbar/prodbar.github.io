@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">Gen Z burnout neural network classification cover</title>
+  <desc id="desc">A neural network, class labels and confusion matrix dashboard for burnout risk classification.</desc>
+  <rect width="1280" height="720" fill="#eef4f6"/>
+  <rect x="78" y="78" width="1124" height="564" rx="28" fill="#ffffff" stroke="#d9e0e6" stroke-width="3"/>
+  <g transform="translate(128 146)">
+    <rect width="365" height="392" rx="20" fill="#fbfcfd" stroke="#d9e0e6" stroke-width="3"/>
+    <text x="30" y="48" fill="#124b52" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="800">Tabular inputs</text>
+    <g fill="#e2f1f2" stroke="#1f6f78" stroke-width="3">
+      <rect x="32" y="82" width="72" height="42" rx="8"/><rect x="120" y="82" width="72" height="42" rx="8"/><rect x="208" y="82" width="72" height="42" rx="8"/>
+      <rect x="32" y="146" width="92" height="42" rx="8"/><rect x="140" y="146" width="66" height="42" rx="8"/><rect x="222" y="146" width="98" height="42" rx="8"/>
+      <rect x="32" y="210" width="118" height="42" rx="8"/><rect x="166" y="210" width="70" height="42" rx="8"/><rect x="252" y="210" width="76" height="42" rx="8"/>
+    </g>
+    <g stroke="#d9e0e6" stroke-width="10" stroke-linecap="round">
+      <path d="M44 310 H318"/><path d="M44 348 H260"/>
+    </g>
+  </g>
+  <g transform="translate(555 130)" stroke="#124b52" stroke-width="4">
+    <g fill="#ffffff">
+      <circle cx="40" cy="80" r="18"/><circle cx="40" cy="170" r="18"/><circle cx="40" cy="260" r="18"/><circle cx="40" cy="350" r="18"/>
+      <circle cx="165" cy="115" r="18"/><circle cx="165" cy="205" r="18"/><circle cx="165" cy="295" r="18"/>
+      <circle cx="290" cy="130" r="18"/><circle cx="290" cy="245" r="18"/><circle cx="290" cy="360" r="18"/>
+    </g>
+    <g opacity="0.4">
+      <path d="M58 80 L147 115"/><path d="M58 80 L147 205"/><path d="M58 170 L147 115"/><path d="M58 170 L147 205"/><path d="M58 170 L147 295"/><path d="M58 260 L147 205"/><path d="M58 260 L147 295"/><path d="M58 350 L147 295"/>
+      <path d="M183 115 L272 130"/><path d="M183 115 L272 245"/><path d="M183 205 L272 130"/><path d="M183 205 L272 245"/><path d="M183 205 L272 360"/><path d="M183 295 L272 245"/><path d="M183 295 L272 360"/>
+    </g>
+  </g>
+  <text x="585" y="548" fill="#124b52" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="800">Neural classifier</text>
+  <g transform="translate(930 142)">
+    <rect width="210" height="126" rx="18" fill="#e2f1f2" stroke="#1f6f78" stroke-width="4"/>
+    <text x="32" y="50" fill="#124b52" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="800">Low</text>
+    <text x="32" y="88" fill="#5d6974" font-family="Segoe UI, Arial, sans-serif" font-size="20">risk class</text>
+    <rect y="152" width="210" height="126" rx="18" fill="#fff7ef" stroke="#a86c36" stroke-width="4"/>
+    <text x="32" y="202" fill="#124b52" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="800">Medium</text>
+    <text x="32" y="240" fill="#5d6974" font-family="Segoe UI, Arial, sans-serif" font-size="20">risk class</text>
+    <rect y="304" width="210" height="126" rx="18" fill="#eef4f6" stroke="#124b52" stroke-width="4"/>
+    <text x="32" y="354" fill="#124b52" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="800">High</text>
+    <text x="32" y="392" fill="#5d6974" font-family="Segoe UI, Arial, sans-serif" font-size="20">risk class</text>
+  </g>
+  <g transform="translate(412 536)">
+    <rect width="240" height="92" rx="16" fill="#fbfcfd" stroke="#d9e0e6" stroke-width="3"/>
+    <g fill="#1f6f78" opacity="0.9"><rect x="28" y="22" width="32" height="32" rx="5"/><rect x="66" y="22" width="32" height="32" rx="5"/><rect x="104" y="22" width="32" height="32" rx="5"/></g>
+    <g fill="#a86c36" opacity="0.65"><rect x="28" y="60" width="32" height="12" rx="4"/><rect x="66" y="60" width="32" height="12" rx="4"/><rect x="104" y="60" width="32" height="12" rx="4"/></g>
+    <text x="150" y="50" fill="#124b52" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700">metrics</text>
+  </g>
+  <text x="128" y="112" fill="#124b52" font-family="Segoe UI, Arial, sans-serif" font-size="38" font-weight="800">Burnout Risk Classification</text>
+</svg>

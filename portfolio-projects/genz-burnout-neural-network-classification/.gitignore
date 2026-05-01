@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# Local/raw data
+data/GenZ_dataset.xlsx
+data/*.xlsx
+
+# Generated local outputs
+results/figures/*
+!results/figures/.gitkeep
+
+# System files
+.DS_Store
+Thumbs.db

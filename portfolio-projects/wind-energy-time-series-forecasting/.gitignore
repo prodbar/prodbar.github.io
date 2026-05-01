@@ -1,0 +1,19 @@
+# R
+.Rhistory
+.RData
+.Ruserdata
+*.html
+*.log
+*.aux
+*.tex
+
+# Local/raw data
+data/*.xlsx
+data/*.xls
+
+# Rendered local outputs
+analysis/*_files/
+
+# System files
+.DS_Store
+Thumbs.db

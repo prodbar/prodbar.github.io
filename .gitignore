@@ -1,0 +1,24 @@
+﻿# Local datasets and large/private files
+*.xlsx
+*.csv
+*.zip
+*.RData
+*.rda
+*.mp4
+*.docx
+*.pptx
+
+# Python / Jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# R
+.Rproj.user/
+.Rhistory
+.RData
+
+# System files
+.DS_Store
+Thumbs.db
+

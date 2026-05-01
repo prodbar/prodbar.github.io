@@ -1,0 +1,33 @@
+{
+  "order": 3,
+  "title": "Healthcare Cost Analytics with Multivariate Methods",
+  "subtitle": "Completed master's coursework project · Healthcare Analytics",
+  "year": "2026",
+  "status": "Completed",
+  "description": "Multivariate analysis project focused on understanding and modeling annual medical insurance costs using dimensionality reduction, categorical data analysis, clustering and supervised classification techniques.",
+  "categories": [
+    "Healthcare Analytics",
+    "Multivariate Analysis",
+    "Statistical Modeling"
+  ],
+  "technologies": [
+    "Python",
+    "pandas",
+    "NumPy",
+    "scikit-learn",
+    "prince",
+    "Matplotlib",
+    "Seaborn"
+  ],
+  "highlights": [
+    "Analyzed a healthcare insurance dataset with demographic, clinical, lifestyle, policy and cost-related variables.",
+    "Applied PCA to synthesize economic, contractual and clinical information into interpretable latent dimensions.",
+    "Combined PCA with regression modeling to study annual medical cost while reducing multicollinearity.",
+    "Used MCA to explore associations between categorical health, lifestyle and personal profile variables.",
+    "Applied clustering on MCA coordinates to identify homogeneous behavioral and insurance-related profiles.",
+    "Built LDA models to classify insured individuals into low, medium and high annual cost groups."
+  ],
+  "links": {
+    "website": "https://www.kaggle.com/datasets/mohankrishnathalla/medical-insurance-cost-prediction"
+  }
+}

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">Production scheduling optimization cover</title>
+  <desc id="desc">Machines, job bars and optimization flow.</desc>
+  <rect width="1280" height="720" fill="#fbfcfd"/>
+  <rect x="80" y="95" width="1120" height="520" rx="22" fill="#eef4f6" stroke="#d9e0e6" stroke-width="3"/>
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#124b52">
+    <text x="132" y="190">M1</text>
+    <text x="132" y="280">M2</text>
+    <text x="132" y="370">M3</text>
+    <text x="132" y="460">M4</text>
+    <text x="132" y="550">M5</text>
+  </g>
+  <g stroke="#d9e0e6" stroke-width="2">
+    <path d="M205 155 H1135"/><path d="M205 245 H1135"/><path d="M205 335 H1135"/><path d="M205 425 H1135"/><path d="M205 515 H1135"/>
+    <path d="M320 130 V575"/><path d="M460 130 V575"/><path d="M600 130 V575"/><path d="M740 130 V575"/><path d="M880 130 V575"/><path d="M1020 130 V575"/>
+  </g>
+  <g>
+    <rect x="220" y="160" width="150" height="42" rx="8" fill="#1f6f78"/>
+    <rect x="385" y="160" width="115" height="42" rx="8" fill="#a86c36"/>
+    <rect x="520" y="160" width="185" height="42" rx="8" fill="#124b52"/>
+    <rect x="735" y="160" width="120" height="42" rx="8" fill="#1f6f78"/>
+    <rect x="245" y="250" width="190" height="42" rx="8" fill="#a86c36"/>
+    <rect x="460" y="250" width="145" height="42" rx="8" fill="#1f6f78"/>
+    <rect x="630" y="250" width="230" height="42" rx="8" fill="#124b52"/>
+    <rect x="895" y="250" width="110" height="42" rx="8" fill="#a86c36"/>
+    <rect x="220" y="340" width="110" height="42" rx="8" fill="#124b52"/>
+    <rect x="360" y="340" width="210" height="42" rx="8" fill="#1f6f78"/>
+    <rect x="595" y="340" width="160" height="42" rx="8" fill="#a86c36"/>
+    <rect x="790" y="340" width="210" height="42" rx="8" fill="#124b52"/>
+    <rect x="260" y="430" width="155" height="42" rx="8" fill="#1f6f78"/>
+    <rect x="450" y="430" width="260" height="42" rx="8" fill="#124b52"/>
+    <rect x="740" y="430" width="170" height="42" rx="8" fill="#a86c36"/>
+    <rect x="220" y="520" width="230" height="42" rx="8" fill="#a86c36"/>
+    <rect x="485" y="520" width="155" height="42" rx="8" fill="#1f6f78"/>
+    <rect x="675" y="520" width="255" height="42" rx="8" fill="#124b52"/>
+  </g>
+  <path d="M965 175 C1030 190 1040 255 980 285 C920 315 935 390 1010 405 C1085 420 1090 500 1020 535" fill="none" stroke="#a86c36" stroke-width="7" stroke-linecap="round" stroke-dasharray="14 14"/>
+  <circle cx="965" cy="175" r="13" fill="#a86c36"/>
+  <circle cx="1020" cy="535" r="13" fill="#a86c36"/>
+  <text x="220" y="95" fill="#124b52" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700">Scheduling optimization</text>
+</svg>

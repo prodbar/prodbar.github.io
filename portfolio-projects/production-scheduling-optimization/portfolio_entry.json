@@ -1,0 +1,33 @@
+{
+  "order": 4,
+  "title": "Production Scheduling Optimization on Unrelated Parallel Machines",
+  "subtitle": "Completed master's coursework project · Operations Research & Scheduling",
+  "year": "2026",
+  "status": "Completed",
+  "description": "Operations research project focused on production scheduling in unrelated parallel machines, comparing exact and metaheuristic approaches under progressively more realistic constraints.",
+  "categories": [
+    "Operations Research",
+    "Scheduling Optimization",
+    "Production Planning"
+  ],
+  "technologies": [
+    "Python",
+    "Google OR-Tools",
+    "CP-SAT",
+    "Genetic Algorithm",
+    "Iterated Greedy",
+    "Excel",
+    "OpenSolver",
+    "pandas",
+    "NumPy"
+  ],
+  "highlights": [
+    "Modeled an unrelated parallel machine scheduling problem with 50 jobs and 5 machines.",
+    "Implemented a base exact model in Excel/OpenSolver and used it as a benchmark.",
+    "Developed Python-based solution approaches using CP-SAT, a Genetic Algorithm and Iterated Greedy.",
+    "Extended the base problem with release dates, sequence-dependent setups, precedence relations and resource constraints.",
+    "Compared methods across increasing levels of complexity using Relative Percentage Deviation.",
+    "Generated reproducible synthetic extensions using fixed random seeds and structured input files."
+  ],
+  "links": {}
+}
