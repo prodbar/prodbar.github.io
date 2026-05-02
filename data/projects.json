@@ -66,7 +66,7 @@
   {
     "order": 3,
     "title": "Production Scheduling Optimization on Unrelated Parallel Machines",
-    "subtitle": "Master's coursework group project - Operations Research & Scheduling",
+    "subtitle": "Operations Research & Scheduling Optimization",
     "year": "2026",
     "image": "public/images/projects/Production Scheduling Optimization on Unrelated Parallel Machines.png",
     "description": "Operations research project focused on production scheduling in unrelated parallel machines, comparing exact and metaheuristic approaches under progressively more realistic constraints.",
@@ -156,7 +156,7 @@
   {
     "order": 6,
     "title": "Healthcare Cost Analytics with Multivariate Methods",
-    "subtitle": "Master's coursework group project - Healthcare Analytics",
+    "subtitle": "Healthcare Analytics with PCA, MCA, clustering and supervised modeling",
     "year": "2025",
     "image": "public/images/projects/Healthcare Cost Analytics with Multivariate Methods.png",
     "description": "Multivariate analysis project focused on understanding and modeling annual medical insurance costs using dimensionality reduction, categorical data analysis, clustering and supervised classification techniques.",
@@ -188,7 +188,7 @@
   {
     "order": 7,
     "title": "Student Sleep and Wellbeing Statistical Analysis in R",
-    "subtitle": "Master's coursework group project - R Programming & Applied Statistics",
+    "subtitle": "Applied statistics, hypothesis testing and regression modeling in R",
     "year": "2025",
     "image": "public/images/projects/Student Sleep and Wellbeing Statistical Analysis in R.png",
     "description": "R-based statistical analysis project studying the relationship between sleep habits, emotional wellbeing and academic performance in university students, including data cleaning, imputation, hypothesis testing and regression modeling.",

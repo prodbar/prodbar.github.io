@@ -14,15 +14,36 @@ Static GitHub Pages portfolio for **Patricia Rodrigo Barrio**.
 
 Project cards are generated from `data/projects.json`. Each project supports:
 
+- `order`
 - `title`
+- `subtitle`
+- `year`
+- `status`
+- `image`
 - `description`
 - `categories`
 - `technologies`
-- `featured`
+- `highlights`
 - `links.github`
+- `links.website`
+- `links.report`
 - `links.demo`
 
-Set `"featured": true` to show a project in the Featured Projects section.
+## Local Preview
+
+Run this command from the repository root:
+
+```bash
+python -m http.server 5500
+```
+
+Then open:
+
+```text
+http://localhost:5500
+```
+
+Do not open `index.html` directly, because project data is loaded from JSON.
 
 ## Profile Image
 
