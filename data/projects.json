@@ -60,7 +60,8 @@
       "Interpreted results with accuracy, class-wise precision, recall, F1-score, confusion matrix and training curves."
     ],
     "links": {
-      "website": "https://www.kaggle.com/datasets/hammadansari7/gen-z-mental-wellness-and-digital-lifestyle-patterns"
+      "website": "https://www.kaggle.com/datasets/hammadansari7/gen-z-mental-wellness-and-digital-lifestyle-patterns",
+      "github": "https://github.com/prodbar/genz-burnout-neural-network-classification"
     }
   },
   {
@@ -92,7 +93,9 @@
       "Compared methods across increasing levels of complexity using Relative Percentage Deviation.",
       "Generated reproducible synthetic extensions using fixed random seeds and structured input files."
     ],
-    "links": {}
+    "links": {
+      "github": "https://github.com/prodbar/production-scheduling-optimization"
+    }
   },
   {
     "order": 4,
@@ -124,7 +127,9 @@
       "Built and interpreted a PLS-DA model for burnout risk discrimination and compared it with a Random Forest classifier."
     ],
     "image": "public/images/projects/Gen Z Mental Wellness Multivariate Monitoring.png",
-    "links": {}
+    "links": {
+      "github": "https://github.com/prodbar/gen-z-mental-wellness-multivariate-monitoring"
+    }
   },
   {
     "order": 5,
@@ -151,7 +156,9 @@
       "Evaluated the behaviour of wind energy generation over time and interpreted the forecasting performance.",
       "Built a reproducible analytical workflow combining industrial data, statistical modeling and visualization."
     ],
-    "links": {}
+    "links": {
+      "github": "https://github.com/prodbar/wind-energy-time-series-forecasting"
+    }
   },
   {
     "order": 6,
@@ -182,7 +189,8 @@
       "Built LDA models to classify insured individuals into low, medium and high annual cost groups."
     ],
     "links": {
-      "website": "https://www.kaggle.com/datasets/mohankrishnathalla/medical-insurance-cost-prediction"
+      "website": "https://www.kaggle.com/datasets/mohankrishnathalla/medical-insurance-cost-prediction",
+      "github": "https://github.com/prodbar/healthcare-cost-multivariate-analysis"
     }
   },
   {
@@ -213,7 +221,9 @@
       "Applied Kruskal-Wallis, ANOVA, Levene and Wilcoxon / Mann-Whitney tests.",
       "Summarized relationships between sleep habits, chronotype, wellbeing indicators and academic performance through visual reporting."
     ],
-    "links": {}
+    "links": {
+      "github": "https://github.com/prodbar/student-sleep-r-statistical-analysis"
+    }
   },
   {
     "order": 8,

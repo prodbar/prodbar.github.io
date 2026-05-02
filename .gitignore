@@ -22,3 +22,6 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
+
+# Local standalone repository staging folder
+standalone-repos/
