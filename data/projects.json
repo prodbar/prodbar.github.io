@@ -254,31 +254,5 @@
     "links": {
       "github": "https://github.com/prodbar/MechanicalPower-Analysis-PANDORA"
     }
-  },
-  {
-    "order": 99,
-    "title": "Portfolio Website",
-    "subtitle": "Static GitHub Pages portfolio",
-    "year": "2026",
-    "status": "In progress",
-    "description": "Static portfolio website built with HTML, CSS and vanilla JavaScript, using JSON as the editable source for project information.",
-    "categories": [
-      "Web"
-    ],
-    "technologies": [
-      "HTML",
-      "CSS",
-      "JavaScript",
-      "JSON",
-      "GitHub Pages"
-    ],
-    "highlights": [
-      "Uses a simple static architecture suitable for GitHub Pages.",
-      "Renders project cards dynamically from data/projects.json.",
-      "Includes responsive layout, category filters and portfolio-ready project metadata."
-    ],
-    "links": {
-      "github": "https://github.com/prodbar/prodbar.github.io"
-    }
   }
 ]
