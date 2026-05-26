@@ -30,7 +30,7 @@
     "links": {}
   },
   {
-    "order": 3,
+    "order": 4,
     "title": "Gen Z Burnout Risk Classification with Neural Networks",
     "subtitle": "Multiclass neural network classification on tabular behavioral data",
     "year": "2026",
@@ -65,7 +65,40 @@
     }
   },
   {
-    "order": 4,
+    "title": "Moroccan Used Cars Market Analysis with Machine Learning",
+    "subtitle": "Supervised and unsupervised learning applied to vehicle market data",
+    "year": "2026",
+    "image": "public/images/projects/Moroccan Used Cars Market Analysis with Machine Learning.png",
+    "description": "Machine learning project analyzing the Moroccan used car market through PCA, fuzzy clustering, classification and regression models for vehicle profiling and price prediction.",
+    "categories": [
+      "Machine Learning",
+      "Statistical Analysis"
+    ],
+    "technologies": [
+      "R",
+      "R Markdown",
+      "PCA",
+      "Fuzzy Clustering",
+      "Random Forest",
+      "Regression Modeling",
+      "Classification",
+      "Data Visualization"
+    ],
+    "highlights": [
+      "Processed and analyzed vehicle listings from the Moroccan used car market.",
+      "Applied PCA to summarize vehicle age, mileage, fiscal power and equipment-related information.",
+      "Used fuzzy clustering to identify interpretable vehicle market profiles.",
+      "Compared supervised models for vehicle condition classification and price prediction.",
+      "Selected Random Forest as the strongest model for both classification and regression tasks.",
+      "Interpreted model importance to identify the main drivers of used car price and condition."
+    ],
+    "links": {
+      "github": "https://github.com/prodbar/moroccan-used-cars-machine-learning"
+    },
+    "order": 3
+  },
+  {
+    "order": 5,
     "title": "Production Scheduling Optimization on Unrelated Parallel Machines",
     "subtitle": "Operations Research & Scheduling Optimization",
     "year": "2026",
@@ -98,7 +131,7 @@
     }
   },
   {
-    "order": 5,
+    "order": 6,
     "title": "Gen Z Mental Wellness Multivariate Monitoring",
     "subtitle": "PCA, PLS, PLS-DA and process monitoring applied to psychological wellbeing data",
     "year": "2026",
@@ -132,7 +165,7 @@
     }
   },
   {
-    "order": 6,
+    "order": 7,
     "title": "Time Series Forecasting of Wind Energy Generation in Spain",
     "subtitle": "ARIMA-based forecasting and temporal analysis in R",
     "year": "2025",
@@ -161,7 +194,7 @@
     }
   },
   {
-    "order": 7,
+    "order": 8,
     "title": "Healthcare Cost Analytics with Multivariate Methods",
     "subtitle": "Healthcare Analytics with PCA, MCA, clustering and supervised modeling",
     "year": "2025",
@@ -194,7 +227,7 @@
     }
   },
   {
-    "order": 8,
+    "order": 9,
     "title": "Student Sleep and Wellbeing Statistical Analysis in R",
     "subtitle": "Applied statistics, hypothesis testing and regression modeling in R",
     "year": "2025",
@@ -226,7 +259,7 @@
     }
   },
   {
-    "order": 9,
+    "order": 10,
     "title": "Effective Mechanical Power in Pediatric Mechanical Ventilation",
     "subtitle": "Bachelor's Thesis awarded with Honors - Biomedical Data Analysis",
     "year": "2025",
