@@ -18,7 +18,7 @@ from ortools.sat.python import cp_model   # solver CP-SAT de Google OR-Tools
 # ── CONFIGURACIÓN DE RUTAS ────────────────────────────────────────────────────
 # Solo es necesario modificar RUTA_EXCEL; el resto se deriva automáticamente.
 
-RUTA_EXCEL = r"C:\Users\USUARIO\Downloads\Trabajo Completo PPP\Carpeta para Ejecutar\R_Cmax.xlsx"
+RUTA_EXCEL = os.path.join("data", "generated", "R_Cmax.xlsx")
 
 # Ruta completa al Excel con los datos del problema
 

@@ -16,7 +16,7 @@ import openpyxl             # lectura y escritura del archivo Excel
 # ── CONFIGURACIÓN DE RUTAS ────────────────────────────────────────────────────
 # Solo es necesario modificar RUTA_EXCEL; el resto se deriva automáticamente.
 
-RUTA_EXCEL = r"C:\Users\USUARIO\Downloads\Trabajo Completo PPP\Carpeta para Ejecutar\R_Cmax.xlsx"
+RUTA_EXCEL = os.path.join("data", "generated", "R_Cmax.xlsx")
 # Ruta completa al archivo Excel que contiene la hoja base con los tiempos de proceso
 
 DIR_CSV = os.path.join(os.path.dirname(RUTA_EXCEL), "datos_extensiones")

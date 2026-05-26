@@ -30,7 +30,7 @@
     "links": {}
   },
   {
-    "order": 2,
+    "order": 3,
     "title": "Gen Z Burnout Risk Classification with Neural Networks",
     "subtitle": "Multiclass neural network classification on tabular behavioral data",
     "year": "2026",
@@ -65,7 +65,7 @@
     }
   },
   {
-    "order": 3,
+    "order": 4,
     "title": "Production Scheduling Optimization on Unrelated Parallel Machines",
     "subtitle": "Operations Research & Scheduling Optimization",
     "year": "2026",
@@ -98,7 +98,7 @@
     }
   },
   {
-    "order": 4,
+    "order": 5,
     "title": "Gen Z Mental Wellness Multivariate Monitoring",
     "subtitle": "PCA, PLS, PLS-DA and process monitoring applied to psychological wellbeing data",
     "year": "2026",
@@ -132,7 +132,7 @@
     }
   },
   {
-    "order": 5,
+    "order": 6,
     "title": "Time Series Forecasting of Wind Energy Generation in Spain",
     "subtitle": "ARIMA-based forecasting and temporal analysis in R",
     "year": "2025",
@@ -161,7 +161,7 @@
     }
   },
   {
-    "order": 6,
+    "order": 7,
     "title": "Healthcare Cost Analytics with Multivariate Methods",
     "subtitle": "Healthcare Analytics with PCA, MCA, clustering and supervised modeling",
     "year": "2025",
@@ -194,7 +194,7 @@
     }
   },
   {
-    "order": 7,
+    "order": 8,
     "title": "Student Sleep and Wellbeing Statistical Analysis in R",
     "subtitle": "Applied statistics, hypothesis testing and regression modeling in R",
     "year": "2025",
@@ -226,7 +226,7 @@
     }
   },
   {
-    "order": 8,
+    "order": 9,
     "title": "Effective Mechanical Power in Pediatric Mechanical Ventilation",
     "subtitle": "Bachelor's Thesis awarded with Honors - Biomedical Data Analysis",
     "year": "2025",
@@ -256,7 +256,7 @@
     }
   },
   {
-    "order": 9,
+    "order": 2,
     "title": "DermaMNIST Skin Lesion Classification",
     "subtitle": "Deep learning comparison for multiclass skin lesion classification",
     "year": "2026",
