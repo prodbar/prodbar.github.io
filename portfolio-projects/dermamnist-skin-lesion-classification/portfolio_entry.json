@@ -1,0 +1,30 @@
+{
+  "order": 9,
+  "title": "DermaMNIST Skin Lesion Classification",
+  "subtitle": "Deep learning comparison for multiclass skin lesion classification",
+  "year": "2026",
+  "description": "Academic comparison of a custom CNN, ImageNet transfer learning, radiology-domain transfer learning and dermatology-oriented pretraining for multiclass skin lesion classification on DermaMNIST.",
+  "categories": [
+    "Deep Learning"
+  ],
+  "technologies": [
+    "Python",
+    "TensorFlow/Keras",
+    "PyTorch",
+    "MedMNIST",
+    "Transfer Learning",
+    "Grad-CAM",
+    "Bootstrap"
+  ],
+  "highlights": [
+    "Compared six deep learning configurations for multiclass skin lesion classification using DermaMNIST.",
+    "Evaluated a custom CNN, ImageNet transfer learning, RadImageNet/RAC initialization and a dermatology-oriented MaxNet/ISIC reference.",
+    "Prioritized Macro F1, Balanced Accuracy, Macro Recall and Cohen's Kappa to account for class imbalance.",
+    "Used bootstrap-based uncertainty estimates and aggregate visual comparisons to support model interpretation.",
+    "Kept raw datasets, clinical images, checkpoints and external pretrained weights out of the public repository."
+  ],
+  "image": "public/images/projects/DermaMNIST Skin Lesion Classification.png",
+  "links": {
+    "github": "https://github.com/prodbar/DermaMNIST-skin-lesion-classification"
+  }
+}

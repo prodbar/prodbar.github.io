@@ -25,3 +25,4 @@ Thumbs.db
 
 # Local standalone repository staging folder
 standalone-repos/
+/DermaMNIST-skin-lesion-classification/
