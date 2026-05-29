@@ -1,9 +1,9 @@
 {
-  "order": 7,
+  "order": 4,
   "title": "Gen Z Burnout Risk Classification with Neural Networks",
   "subtitle": "Multiclass neural network classification on tabular behavioral data",
   "year": "2026",
-  "description": "Deep learning project focused on multiclass classification of burnout risk in Gen Z using tabular lifestyle, mental wellness and digital behavior variables.",
+  "description": "Deep learning project focused on multiclass classification of burnout risk in Gen Z using lifestyle, mental wellness and digital behavior variables, with class weighting and macro-metric evaluation.",
   "categories": [
     "Machine Learning",
     "Deep Learning",
@@ -24,13 +24,15 @@
   "highlights": [
     "Built a supervised multiclass classification pipeline for Burnout_Risk with Low, Medium and High classes.",
     "Applied stratified train-validation-test splitting, z-score scaling, one-hot encoding and class weighting.",
-    "Compared a linear baseline, shallow neural network, Keras Tuner search and deeper MLP architectures.",
-    "Studied the effect of activation functions, dropout intensity and optimizers on model performance.",
-    "Selected a deep MLP with dropout, ReLU activation and RMSprop as the best-performing configuration.",
-    "Interpreted results with accuracy, class-wise precision, recall, F1-score, confusion matrix and training curves."
+    "Compared linear softmax, shallow neural network, Keras Tuner and deeper MLP configurations.",
+    "Selected the final model using validation macro F1 and evaluated it with accuracy, macro F1, balanced accuracy and confusion matrices.",
+    "Reported a final test accuracy of 0.998 and macro F1 of 0.9986 for the selected deep MLP configuration.",
+    "Documented the strong class imbalance and interpreted the Low class carefully due to its small test support."
   ],
-  "image": "public/images/projects/genz-burnout-neural-network-cover.svg",
+  "image": "public/images/projects/Gen Z Burnout Risk Classification with Neural Networks.png",
   "links": {
-    "website": "https://www.kaggle.com/datasets/hammadansari7/gen-z-mental-wellness-and-digital-lifestyle-patterns"
+    "website": "https://www.kaggle.com/datasets/hammadansari7/gen-z-mental-wellness-and-digital-lifestyle-patterns",
+    "github": "https://github.com/prodbar/genz-burnout-neural-network-classification",
+    "report": "report/genz_burnout_neural_network_report.pdf"
   }
 }

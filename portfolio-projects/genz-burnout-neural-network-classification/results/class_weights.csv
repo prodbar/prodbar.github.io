@@ -1,0 +1,4 @@
+clase,codigo,n_train,porcentaje_train,peso_clase
+Low,0,51,0.638,52.281
+Medium,1,3638,45.481,0.7329
+High,2,4310,53.882,0.6186

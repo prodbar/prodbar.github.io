@@ -9,10 +9,29 @@ env/
 # Local/raw data
 data/GenZ_dataset.xlsx
 data/*.xlsx
+data/*.csv
 
-# Generated local outputs
-results/figures/*
-!results/figures/.gitkeep
+# Keep final lightweight result tables
+!results/*.csv
+!results/**/*.csv
+
+# Model artifacts and tuner checkpoints
+*.keras
+*.h5
+*.hdf5
+*.ckpt
+*.pt
+*.pth
+checkpoints/
+models/
+weights/
+logs/
+keras_tuner*/
+results/keras_tuner*/
+results/best_model.keras
+
+# Temporary update folders
+_update_final/
 
 # System files
 .DS_Store

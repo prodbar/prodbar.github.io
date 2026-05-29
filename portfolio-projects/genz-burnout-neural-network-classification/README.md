@@ -1,10 +1,12 @@
 # Gen Z Burnout Risk Classification with Neural Networks
 
-Multiclass neural network classification on tabular behavioral data
+Multiclass neural network classification on tabular behavioral and digital wellbeing data.
 
-## Project Overview
+## Overview
 
-This project studies multiclass classification of burnout risk in Gen Z using a tabular dataset with lifestyle, digital behavior and mental wellness variables. The work compares a linear softmax baseline, shallow neural networks, hyperparameter search and deeper fully connected neural network architectures.
+This project studies burnout risk classification in Gen Z using a multilayer perceptron workflow. The goal is to predict the target variable `Burnout_Risk`, with three classes: Low, Medium and High, from lifestyle, digital behavior and mental wellness variables.
+
+The work was developed for the course **Simulacion y Redes Neuronales** by Patricia Rodrigo Barrio and Victor Rodriguez Albendea.
 
 ## Dataset
 
@@ -12,51 +14,60 @@ The project uses the Gen Z Mental Wellness & Digital Lifestyle Patterns dataset 
 
 https://www.kaggle.com/datasets/hammadansari7/gen-z-mental-wellness-and-digital-lifestyle-patterns
 
-The dataset contains 10,000 observations and 22 variables. The target variable is `Burnout_Risk`, with three classes: Low, Medium and High. Predictors include numerical and categorical variables related to digital lifestyle, wellbeing and personal context.
+The dataset contains 10,000 observations and 22 variables. Predictors include numerical and categorical variables related to digital lifestyle, emotional wellbeing, sleep, stress, screen time and personal context.
 
-The raw Excel file is kept locally under `data/` and ignored by Git until public redistribution is explicitly confirmed.
+The target distribution is strongly imbalanced. In the training partition used in the final experiment, the Low class represents less than 1% of the samples, while Medium and High dominate the dataset. This imbalance is handled with class weights during model training and with macro-oriented evaluation metrics.
 
-## Objectives
-
-- Build a reproducible supervised learning pipeline for multiclass burnout risk classification.
-- Compare linear and neural network approaches on tabular behavioral data.
-- Address mixed numerical and categorical predictors through preprocessing.
-- Use class weighting to account for imbalance in the target classes.
-- Evaluate models using global and class-wise classification metrics.
-- Interpret the Low class with care because it has very low support in the test set.
+The raw Excel file is kept locally under `data/` and is ignored by Git until redistribution permission is explicitly confirmed.
 
 ## Methodology
+
+The final workflow includes:
 
 - Stratified train-validation-test split.
 - z-score normalization for numerical variables.
 - One-hot encoding for categorical variables.
-- Class weighting to address class imbalance.
+- Class weighting to reduce the effect of target imbalance.
 - Linear softmax baseline.
-- Shallow neural network.
+- Shallow neural network models.
 - Keras Tuner Hyperband search.
-- Deep fully connected neural network.
-- Dropout regularization.
-- Activation function comparison.
-- Optimizer comparison.
+- Deep multilayer perceptron models with dropout.
+- Activation and optimizer comparison.
+- Evaluation with accuracy, macro precision, macro recall, macro F1, balanced accuracy and confusion matrices.
 
-## Models Compared
+The final MLP family uses fully connected hidden layers, nonlinear activations, dropout regularization and early stopping based on validation performance.
 
-- Linear softmax baseline.
-- Shallow neural network.
-- Tuned shallow neural network selected through Keras Tuner Hyperband.
-- Deep multilayer perceptron with dropout regularization.
-- Variants comparing activation functions and optimizers.
+## Final Results
 
-## Evaluation Metrics
+The final experiment outputs are stored in `results/`.
 
-The project evaluates models using accuracy, class-wise precision, recall, F1-score, confusion matrix and training curves.
+According to `results/experiment_config.json`, model selection was based on validation macro F1. The selected final model is:
 
-## Key Takeaways
+```text
+deep_sigmoid_adam_dropout025
+```
 
-- The baseline linear model reached 0.901 test accuracy.
-- Keras Tuner selected a 64-unit sigmoid model with learning rate 0.01 and reached 0.996 test accuracy.
-- The best final model was a deep MLP with dropout, ReLU activation and RMSprop optimizer, reaching 0.997 test accuracy.
-- The Low class should be interpreted carefully because it has very low support in the test set.
+The final summary table reports:
+
+- Test accuracy: 0.998
+- Macro precision: 0.9985
+- Macro recall / balanced accuracy: 0.9988
+- Macro F1: 0.9986
+- Low-class support in the test set: 6 samples
+
+The Low class must be interpreted carefully because its support is very small. For that reason, macro metrics and the confusion matrix are more informative than accuracy alone.
+
+## Main Outputs
+
+- `results/summary_results.csv`: complete model comparison table.
+- `results/final_table_report.csv`: compact table used for reporting.
+- `results/class_weights.csv`: class weights used in the final training protocol.
+- `results/experiment_config.json`: experiment configuration and selected model.
+- `results/table_results_overleaf.tex`: LaTeX table for the report.
+- `results/figures/`: class distribution, class weights, learning curves and confusion matrix figures.
+- `report/genz_burnout_neural_network_report.pdf`: final coursework report.
+
+The trained `.keras` model and Keras Tuner checkpoints are not redistributed. They can be regenerated by running the notebook with the local dataset.
 
 ## Repository Structure
 
@@ -67,18 +78,45 @@ The project evaluates models using accuracy, class-wise precision, recall, F1-sc
 |-- notebooks/
 |   `-- genz_burnout_neural_network_classification.ipynb
 |-- report/
-|   `-- genz_burnout_neural_network_classification.pdf
+|   `-- genz_burnout_neural_network_report.pdf
 |-- results/
+|   |-- class_weights.csv
+|   |-- experiment_config.json
+|   |-- final_table_report.csv
+|   |-- summary_results.csv
+|   |-- table_results_overleaf.tex
 |   `-- figures/
 |-- .gitignore
 |-- portfolio_entry.json
 `-- README.md
 ```
 
+## How to Reproduce
+
+1. Download the dataset from Kaggle.
+2. Place the local Excel file as `data/GenZ_dataset.xlsx`.
+3. Create a Python environment and install the required packages used in the notebook:
+
+```bash
+pip install pandas numpy matplotlib seaborn scikit-learn tensorflow keras-tuner openpyxl
+```
+
+4. Open and run:
+
+```text
+notebooks/genz_burnout_neural_network_classification.ipynb
+```
+
+The notebook regenerates the preprocessing pipeline, model comparison outputs, final figures and model artifacts.
+
 ## Technologies
 
 Python, TensorFlow, Keras, Keras Tuner, scikit-learn, pandas, NumPy, Matplotlib and Seaborn.
 
+## Authors
+
+Patricia Rodrigo Barrio and Victor Rodriguez Albendea.
+
 ## Publication Notes
 
-This folder is prepared as a portfolio-ready repository. The dataset is public on Kaggle, but the local Excel copy is ignored for now. Before publishing, confirm whether the exact local `GenZ_dataset.xlsx` file can be redistributed or instruct users to download it directly from Kaggle.
+This repository is prepared for public portfolio use. The raw dataset, trained model file and hyperparameter-search checkpoints are not included. Public users should download the dataset from Kaggle and regenerate model artifacts locally.

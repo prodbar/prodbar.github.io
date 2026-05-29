@@ -12,4 +12,4 @@ The local Excel file is:
 data/GenZ_dataset.xlsx
 ```
 
-This file is ignored by Git until redistribution permission is explicitly confirmed. Public users should download the dataset directly from Kaggle.
+This file is ignored by Git until redistribution permission is explicitly confirmed. Public users should download the dataset directly from Kaggle and place it in this folder before running the notebook.
