@@ -1,7 +1,7 @@
 [
   {
     "order": 1,
-    "title": "PINN-FEM Framework for Hyperelastic Biomechanics Simulation",
+    "title": "Physics-Informed Neural Networks for Hyperelastic Material Identification",
     "subtitle": "Master's Thesis - Physics-Informed Neural Networks - Computational Biomechanics",
     "year": "2026",
     "image": "public/images/projects/TFM.png",
@@ -26,7 +26,9 @@
       "Analyzed the role of the Dirichlet penalty weight in accurately reproducing FEM displacement fields.",
       "Extended the framework toward inverse material parameter identification."
     ],
-    "links": {}
+    "links": {
+      "github": "https://github.com/prodbar/pinn-hyperelastic-material-identification"
+    }
   },
   {
     "order": 4,
@@ -259,7 +261,7 @@
   },
   {
     "order": 10,
-    "title": "Effective Mechanical Power in Pediatric Mechanical Ventilation",
+    "title": "Analysis of the Influence of Effective Mechanical Power on the Development of Ventilator-Induced Lung Injury",
     "subtitle": "Bachelor's Thesis awarded with Honors - Biomedical Data Analysis",
     "year": "2025",
     "image": "public/images/projects/TFG.png",
