@@ -5,7 +5,7 @@
     "subtitle": "Master's Thesis - Physics-Informed Neural Networks - Computational Biomechanics",
     "year": "2026",
     "image": "public/images/projects/TFM.png",
-    "description": "Development of a Physics-Informed Neural Network framework to approximate FEM displacement fields in 3D hyperelastic materials, combining Mooney-Rivlin modeling, boundary condition enforcement and neural network optimization.",
+    "description": "Development of an energy-based Physics-Informed Neural Network framework for solving forward and inverse hyperelastic problems, using FEM reference solutions and Mooney-Rivlin constitutive modeling to recover displacement fields and identify material parameters.",
     "categories": [
       "Computational Modeling",
       "Biomedical AI"
@@ -19,12 +19,12 @@
       "Optimization"
     ],
     "highlights": [
-      "Implemented a FEM reference workflow for a 3D hyperelastic solid under mixed Dirichlet and Neumann boundary conditions.",
-      "Developed a PINN-based approximation of the displacement field using physics-informed loss terms.",
-      "Modeled large-deformation hyperelastic behavior through a Mooney-Rivlin strain energy formulation.",
-      "Studied the effect of architecture, activation functions, optimizers and loss-weighting strategies on training performance.",
-      "Analyzed the role of the Dirichlet penalty weight in accurately reproducing FEM displacement fields.",
-      "Extended the framework toward inverse material parameter identification."
+      "Developed a MATLAB PINN framework for forward and inverse hyperelastic mechanics problems.",
+      "Formulated the physics-informed objective through hyperelastic strain energy and mechanical boundary conditions.",
+      "Used FEM reference solutions to validate displacement predictions and assess the mechanical consistency of the learned solution.",
+      "Studied neural network architecture, activation functions, optimization strategies and loss weighting for stable PINN training.",
+      "Extended the direct formulation to inverse material identification with progressively increasing parameter complexity.",
+      "Investigated the identification of effective shear stiffness, bulk modulus and Mooney-Rivlin parameters through learnable material properties."
     ],
     "links": {
       "github": "https://github.com/prodbar/pinn-hyperelastic-material-identification"
