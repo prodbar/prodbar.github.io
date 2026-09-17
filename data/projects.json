@@ -4,7 +4,6 @@
     "title": "PINN-FEM Framework for Hyperelastic Biomechanics Simulation",
     "subtitle": "Master's Thesis - Physics-Informed Neural Networks - Computational Biomechanics",
     "year": "2026",
-    "status": "In progress",
     "image": "public/images/projects/TFM.png",
     "description": "Development of a Physics-Informed Neural Network framework to approximate FEM displacement fields in 3D hyperelastic materials, combining Mooney-Rivlin modeling, boundary condition enforcement and neural network optimization.",
     "categories": [
