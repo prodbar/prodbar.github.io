@@ -197,6 +197,7 @@ h3 {
   max-width: 700px;
   color: var(--muted);
   font-size: 1.03rem;
+  line-height: 1.7;
   overflow-wrap: anywhere;
 }
 
@@ -439,12 +440,25 @@ h3 {
 }
 
 .project-card p {
+  margin-bottom: 14px;
   color: var(--muted);
+  line-height: 1.68;
+}
+
+.project-card h3 {
+  overflow-wrap: anywhere;
+}
+
+.project-subtitle {
+  margin-bottom: 12px;
+  color: var(--accent-dark);
+  font-weight: 700;
+  line-height: 1.45;
 }
 
 .project-card .tag-row {
   margin-top: auto;
-  padding-top: 14px;
+  padding-top: 16px;
 }
 
 .project-links {
@@ -546,6 +560,7 @@ h3 {
 
 .cv-card p:not(.eyebrow) {
   color: var(--muted);
+  line-height: 1.68;
 }
 
 .cv-card .button {
@@ -713,12 +728,13 @@ h3 {
 }
 
 .project-highlights {
-  margin: 0 0 14px;
+  margin: 2px 0 18px;
   padding-left: 18px;
   color: var(--muted);
   font-size: 0.94rem;
+  line-height: 1.58;
 }
 
 .project-highlights li {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
