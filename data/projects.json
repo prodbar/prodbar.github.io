@@ -265,7 +265,7 @@
     "subtitle": "Bachelor's Thesis awarded with Honors - Biomedical Data Analysis",
     "year": "2025",
     "image": "public/images/projects/TFG.png",
-    "description": "Biomedical data analysis project focused on estimating Effective Mechanical Power as a potential indicator of ventilatory aggressiveness in mechanically ventilated pediatric patients.",
+    "description": "Retrospective analysis of Effective Mechanical Power as an indirect biomarker of ventilator-induced lung injury risk in pediatric patients undergoing volume-controlled mechanical ventilation, using clinical data from the multicenter PANDORA database.",
     "categories": [
       "Biomedical AI",
       "Healthcare Analytics"
@@ -278,12 +278,12 @@
       "Data Visualization"
     ],
     "highlights": [
-      "Analyzed clinical and ventilatory data from pediatric mechanical ventilation cases.",
-      "Developed MATLAB-based analytical workflows to estimate mechanical power-related metrics.",
-      "Studied Effective Mechanical Power as a candidate indicator of ventilatory aggressiveness.",
-      "Built reproducible scripts for preprocessing, calculation and visualization of derived variables.",
-      "Connected biomedical engineering, clinical interpretation and quantitative analysis.",
-      "Bachelor's Thesis awarded with Honors."
+      "Conducted a retrospective observational study on a cohort of 73 pediatric patients from the multicenter PANDORA database.",
+      "Adapted an Effective Mechanical Power formulation previously validated in adults to pediatric physiology and normalized it by ideal body weight.",
+      "Calculated both instantaneous and accumulated Effective Mechanical Power to characterize ventilatory energy exposure over time.",
+      "Analyzed the association between accumulated Effective Mechanical Power and clinically relevant outcomes including hospital mortality and ventilator-free days.",
+      "Observed significantly higher accumulated Effective Mechanical Power in non-survivors, supporting a potential association between sustained ventilatory energy load and adverse outcomes.",
+      "Evaluated the potential of Effective Mechanical Power as a quantitative tool for personalized protective ventilation in pediatric intensive care."
     ],
     "links": {
       "github": "https://github.com/prodbar/MechanicalPower-Analysis-PANDORA"

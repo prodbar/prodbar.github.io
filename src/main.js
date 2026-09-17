@@ -210,7 +210,7 @@ function renderFilters() {
 
 async function loadProjects() {
   try {
-    const response = await fetch("data/projects.json");
+    const response = await fetch("data/projects.json", { cache: "no-store" });
 
     if (!response.ok) {
       throw new Error(`Unable to load projects: ${response.status}`);
