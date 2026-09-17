@@ -2,7 +2,7 @@
   {
     "order": 1,
     "title": "Physics-Informed Neural Networks for Hyperelastic Material Identification",
-    "subtitle": "Master's Thesis - Physics-Informed Neural Networks - Computational Biomechanics",
+    "subtitle": "Master's Thesis · Physics-Informed Neural Networks · Computational Biomechanics",
     "year": "2026",
     "image": "public/images/projects/TFM.png",
     "description": "Development of an energy-based Physics-Informed Neural Network framework for solving forward and inverse hyperelastic problems, using FEM reference solutions and Mooney-Rivlin constitutive modeling to recover displacement fields and identify material parameters.",
@@ -262,12 +262,12 @@
   {
     "order": 10,
     "title": "Analysis of the Influence of Effective Mechanical Power on the Development of Ventilator-Induced Lung Injury",
-    "subtitle": "Bachelor's Thesis awarded with Honors - Biomedical Data Analysis",
+    "subtitle": "Bachelor's Thesis awarded with Honors · Biomedical Data Analysis",
     "year": "2025",
     "image": "public/images/projects/TFG.png",
     "description": "Retrospective analysis of Effective Mechanical Power as an indirect biomarker of ventilator-induced lung injury risk in pediatric patients undergoing volume-controlled mechanical ventilation, using clinical data from the multicenter PANDORA database.",
     "categories": [
-      "Biomedical AI",
+      "Biomedical Engineering",
       "Healthcare Analytics"
     ],
     "technologies": [
